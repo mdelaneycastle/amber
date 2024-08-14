@@ -86,7 +86,7 @@ header nav ul li a:hover {
     height: auto;
     display: block;
 
-    filter: brightness(70%) !important;
+    filter: brightness(50%) !important;
     transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
