@@ -1,3 +1,4 @@
+/* General reset and body styling */
 * {
     margin: 0;
     padding: 0;
@@ -10,6 +11,7 @@ body {
     background-color: #f8f8f8;
 }
 
+/* Sticky header */
 header.sticky-header {
     position: fixed;
     top: 0;
@@ -40,6 +42,7 @@ header nav ul li a:hover {
     color: #888;
 }
 
+/* Hero section styling */
 .hero {
     height: 100vh;
     background-color: #222;
@@ -54,6 +57,7 @@ header nav ul li a:hover {
     font-size: 48px;
 }
 
+/* Gallery section with dimmed images */
 .gallery-section {
     padding: 60px 20px;
     background-color: #f0f0f0;
@@ -81,14 +85,17 @@ header nav ul li a:hover {
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    filter: brightness(70%);
+    transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .gallery-item:hover img {
+    filter: brightness(100%);
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* About and contact sections */
 .about-section,
 .contact-section {
     padding: 60px 20px;
@@ -148,6 +155,7 @@ header nav ul li a:hover {
     background-color: #555;
 }
 
+/* Footer styling */
 footer {
     padding: 20px 0;
     background-color: #000;
