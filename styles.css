@@ -85,7 +85,7 @@ header nav ul li a:hover {
     width: 100%;
     height: auto;
     display: block;
-    filter: brightness(70%);
+    filter: brightness(20%);
     transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
