@@ -1,0 +1,164 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 * \{\
+    margin: 0;\
+    padding: 0;\
+    box-sizing: border-box;\
+\}\
+\
+body \{\
+    font-family: 'Arial', sans-serif;\
+    color: #333;\
+    background-color: #f8f8f8;\
+\}\
+\
+header.sticky-header \{\
+    position: fixed;\
+    top: 0;\
+    width: 100%;\
+    background-color: #000;\
+    padding: 10px 0;\
+    z-index: 1000;\
+\}\
+\
+header nav ul \{\
+    list-style: none;\
+    display: flex;\
+    justify-content: center;\
+\}\
+\
+header nav ul li \{\
+    margin: 0 20px;\
+\}\
+\
+header nav ul li a \{\
+    color: #fff;\
+    text-decoration: none;\
+    font-size: 18px;\
+    transition: color 0.3s ease;\
+\}\
+\
+header nav ul li a:hover \{\
+    color: #888;\
+\}\
+\
+.hero \{\
+    height: 100vh;\
+    background-color: #222;\
+    color: #fff;\
+    display: flex;\
+    justify-content: center;\
+    align-items: center;\
+    text-align: center;\
+\}\
+\
+.hero h1 \{\
+    font-size: 48px;\
+\}\
+\
+.gallery-section \{\
+    padding: 60px 20px;\
+    background-color: #f0f0f0;\
+\}\
+\
+.gallery-section h2 \{\
+    text-align: center;\
+    margin-bottom: 40px;\
+    color: #333;\
+\}\
+\
+.gallery \{\
+    display: grid;\
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));\
+    gap: 20px;\
+    padding: 0 20px;\
+\}\
+\
+.gallery-item \{\
+    position: relative;\
+    overflow: hidden;\
+\}\
+\
+.gallery-item img \{\
+    width: 100%;\
+    height: auto;\
+    display: block;\
+    transition: transform 0.3s ease, box-shadow 0.3s ease;\
+\}\
+\
+.gallery-item:hover img \{\
+    transform: scale(1.05);\
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);\
+\}\
+\
+.about-section,\
+.contact-section \{\
+    padding: 60px 20px;\
+    background-color: #fff;\
+\}\
+\
+.about-section h2,\
+.contact-section h2 \{\
+    text-align: center;\
+    margin-bottom: 40px;\
+    color: #333;\
+\}\
+\
+.about-section p \{\
+    max-width: 800px;\
+    margin: 0 auto;\
+    text-align: center;\
+    color: #555;\
+\}\
+\
+.contact-section form \{\
+    max-width: 600px;\
+    margin: 0 auto;\
+    display: flex;\
+    flex-direction: column;\
+    gap: 20px;\
+\}\
+\
+.contact-section form input,\
+.contact-section form textarea \{\
+    padding: 15px;\
+    font-size: 16px;\
+    border: 1px solid #ccc;\
+    border-radius: 5px;\
+    background-color: #f0f0f0;\
+    transition: background-color 0.3s ease;\
+\}\
+\
+.contact-section form input:focus,\
+.contact-section form textarea:focus \{\
+    background-color: #e0e0e0;\
+    outline: none;\
+\}\
+\
+.contact-section form button \{\
+    padding: 15px;\
+    font-size: 16px;\
+    border: none;\
+    border-radius: 5px;\
+    background-color: #333;\
+    color: #fff;\
+    cursor: pointer;\
+    transition: background-color 0.3s ease;\
+\}\
+\
+.contact-section form button:hover \{\
+    background-color: #555;\
+\}\
+\
+footer \{\
+    padding: 20px 0;\
+    background-color: #000;\
+    color: #fff;\
+    text-align: center;\
+\}\
+}
