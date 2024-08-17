@@ -74,12 +74,27 @@
             width: 100%;
             text-align: center;
             padding: 20px 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #000;
+            left: 0;
+            bottom: 10px; /* Gap between text and underline */
+            transition: width 0.3s ease;
+        }
+
+        .menu a:hover::after {
+            width: 100%;
         }
 
         .menu a:hover {
-            background-color: #888;
-            color: #fff;
+            color: #000;
         }
 
         /* Hero section styling */
