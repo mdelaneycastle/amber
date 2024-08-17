@@ -50,27 +50,36 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            background-color: #000;
+            background-color: #fff;
             position: absolute;
             top: 60px;
             width: 100%;
             padding: 10px 0;
-        }
-
-        .menu a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 18px;
-            margin: 10px 0;
-            transition: color 0.3s ease;
-        }
-
-        .menu a:hover {
-            color: #888;
+            opacity: 0;
+            transform: translateY(-100%);
+            transition: transform 0.5s ease, opacity 0.5s ease;
         }
 
         .menu.show {
             display: flex;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .menu a {
+            color: #000;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 10px 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .menu a:hover {
+            background-color: #888;
+            color: #fff;
         }
 
         /* Hero section styling */
@@ -253,7 +262,11 @@
         const menu = document.getElementById('menu');
 
         menuIcon.addEventListener('click', () => {
-            menu.classList.toggle('show');
+            if (menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            } else {
+                menu.classList.add('show');
+            }
         });
     </script>
 </body>
