@@ -29,6 +29,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
 
         .menu-icon {
@@ -47,7 +48,7 @@
         }
 
         .menu {
-            display: none;
+            display: flex;
             flex-direction: column;
             align-items: center;
             background-color: #fff;
@@ -55,14 +56,14 @@
             top: 60px;
             width: 100%;
             overflow: hidden;
-            opacity: 0;
             max-height: 0;
+            opacity: 0;
             transition: max-height 0.5s ease, opacity 0.5s ease;
         }
 
-        .menu.show {
-            display: flex;
-            max-height: 300px; /* Adjust this to match the desired height */
+        /* When the header is hovered, the menu slides down */
+        header.sticky-header:hover .menu {
+            max-height: 300px; /* Adjust to the correct height */
             opacity: 1;
         }
 
@@ -207,10 +208,10 @@
 <body>
 
     <header class="sticky-header">
-        <div class="menu-icon" id="menu-icon">
+        <div class="menu-icon">
             &#9776;
         </div>
-        <nav class="menu" id="menu">
+        <nav class="menu">
             <a href="#home">Home</a>
             <a href="#about">About Me</a>
             <a href="#contact">Contact</a>
@@ -256,17 +257,5 @@
         <p>&copy; 2024 My Art Portfolio</p>
     </footer>
 
-    <script>
-        const menuIcon = document.getElementById('menu-icon');
-        const menu = document.getElementById('menu');
-
-        menuIcon.addEventListener('click', () => {
-            if (menu.classList.contains('show')) {
-                menu.classList.remove('show');
-            } else {
-                menu.classList.add('show');
-            }
-        });
-    </script>
 </body>
 </html>
