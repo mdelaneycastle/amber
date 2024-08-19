@@ -283,7 +283,11 @@
     <script>
         window.addEventListener('load', () => {
             const paintSplash = document.querySelector('.paint-splash');
-            paintSplash.style.transform = 'translateX(100%)';
+            
+            // Delay the start of the transition by 1 second (1000ms)
+            setTimeout(() => {
+                paintSplash.style.transform = 'translateX(100%)';
+            }, 1000); // 1000ms = 1 second
         });
     </script>
 </body>
