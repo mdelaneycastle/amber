@@ -6,7 +6,7 @@
     <title>My Planner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;500;600;700&family=Caveat:wght@500;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -101,6 +101,135 @@
             --accent-dark: #D4567F;
             --cream: #FDF8F9;
             --cream-dark: #F9EDF0;
+        }
+
+        /* Professional/Masculine Themes */
+        [data-theme="slate"] {
+            --primary: #64748B;
+            --primary-light: #CBD5E1;
+            --accent: #475569;
+            --accent-dark: #334155;
+            --cream: #F8FAFC;
+            --cream-dark: #E2E8F0;
+            --secondary: #94A3B8;
+            --secondary-dark: #64748B;
+            --tertiary: #A1A1AA;
+            --tertiary-dark: #71717A;
+        }
+
+        [data-theme="midnight"] {
+            --primary: #374151;
+            --primary-light: #4B5563;
+            --accent: #1F2937;
+            --accent-dark: #111827;
+            --cream: #F9FAFB;
+            --cream-dark: #E5E7EB;
+            --secondary: #6B7280;
+            --secondary-dark: #4B5563;
+            --tertiary: #9CA3AF;
+            --tertiary-dark: #6B7280;
+        }
+
+        [data-theme="monochrome"] {
+            --primary: #E5E5E5;
+            --primary-light: #F5F5F5;
+            --accent: #404040;
+            --accent-dark: #262626;
+            --cream: #FAFAFA;
+            --cream-dark: #E5E5E5;
+            --secondary: #D4D4D4;
+            --secondary-dark: #A3A3A3;
+            --tertiary: #D4D4D4;
+            --tertiary-dark: #A3A3A3;
+        }
+
+        [data-theme="carbon"] {
+            --primary: #27272A;
+            --primary-light: #3F3F46;
+            --accent: #18181B;
+            --accent-dark: #09090B;
+            --cream: #FAFAFA;
+            --cream-dark: #E4E4E7;
+            --secondary: #52525B;
+            --secondary-dark: #3F3F46;
+            --tertiary: #71717A;
+            --tertiary-dark: #52525B;
+        }
+
+        /* Professional font styling for dark themes */
+        [data-theme="slate"],
+        [data-theme="midnight"],
+        [data-theme="monochrome"],
+        [data-theme="carbon"] {
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        [data-theme="slate"] body,
+        [data-theme="midnight"] body,
+        [data-theme="monochrome"] body,
+        [data-theme="carbon"] body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        [data-theme="slate"] .greeting-text,
+        [data-theme="slate"] .card-title,
+        [data-theme="slate"] .modal-title,
+        [data-theme="slate"] .planner-title,
+        [data-theme="slate"] .notes-board-title,
+        [data-theme="slate"] .logo-text,
+        [data-theme="slate"] .auth-logo-text,
+        [data-theme="slate"] .auth-title,
+        [data-theme="slate"] .calendar-month,
+        [data-theme="slate"] .note-editor-title,
+        [data-theme="slate"] .event-detail-title,
+        [data-theme="slate"] .day-view-date,
+        [data-theme="midnight"] .greeting-text,
+        [data-theme="midnight"] .card-title,
+        [data-theme="midnight"] .modal-title,
+        [data-theme="midnight"] .planner-title,
+        [data-theme="midnight"] .notes-board-title,
+        [data-theme="midnight"] .logo-text,
+        [data-theme="midnight"] .auth-logo-text,
+        [data-theme="midnight"] .auth-title,
+        [data-theme="midnight"] .calendar-month,
+        [data-theme="midnight"] .note-editor-title,
+        [data-theme="midnight"] .event-detail-title,
+        [data-theme="midnight"] .day-view-date,
+        [data-theme="monochrome"] .greeting-text,
+        [data-theme="monochrome"] .card-title,
+        [data-theme="monochrome"] .modal-title,
+        [data-theme="monochrome"] .planner-title,
+        [data-theme="monochrome"] .notes-board-title,
+        [data-theme="monochrome"] .logo-text,
+        [data-theme="monochrome"] .auth-logo-text,
+        [data-theme="monochrome"] .auth-title,
+        [data-theme="monochrome"] .calendar-month,
+        [data-theme="monochrome"] .note-editor-title,
+        [data-theme="monochrome"] .event-detail-title,
+        [data-theme="monochrome"] .day-view-date,
+        [data-theme="carbon"] .greeting-text,
+        [data-theme="carbon"] .card-title,
+        [data-theme="carbon"] .modal-title,
+        [data-theme="carbon"] .planner-title,
+        [data-theme="carbon"] .notes-board-title,
+        [data-theme="carbon"] .logo-text,
+        [data-theme="carbon"] .auth-logo-text,
+        [data-theme="carbon"] .auth-title,
+        [data-theme="carbon"] .calendar-month,
+        [data-theme="carbon"] .note-editor-title,
+        [data-theme="carbon"] .event-detail-title,
+        [data-theme="carbon"] .day-view-date {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Professional theme sticky notes - cleaner look */
+        [data-theme="slate"] .sticky-note-content,
+        [data-theme="midnight"] .sticky-note-content,
+        [data-theme="monochrome"] .sticky-note-content,
+        [data-theme="carbon"] .sticky-note-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
         }
 
         * {
@@ -2147,6 +2276,10 @@
         .theme-preview.ocean { background: linear-gradient(135deg, #5BA4C4 0%, #A8D4E8 100%); }
         .theme-preview.sunset { background: linear-gradient(135deg, #FF7B54 0%, #FFB88C 100%); }
         .theme-preview.rose { background: linear-gradient(135deg, #E87A9F 0%, #F4B8C5 100%); }
+        .theme-preview.slate { background: linear-gradient(135deg, #475569 0%, #94A3B8 100%); }
+        .theme-preview.midnight { background: linear-gradient(135deg, #1F2937 0%, #4B5563 100%); }
+        .theme-preview.monochrome { background: linear-gradient(135deg, #404040 0%, #E5E5E5 100%); }
+        .theme-preview.carbon { background: linear-gradient(135deg, #18181B 0%, #3F3F46 100%); }
 
         .theme-option span {
             font-size: 11px;
@@ -2325,6 +2458,105 @@
         .settings-theme-preview.ocean { background: linear-gradient(135deg, #5BA4C4 0%, #A8D4E8 100%); }
         .settings-theme-preview.sunset { background: linear-gradient(135deg, #FF7B54 0%, #FFB88C 100%); }
         .settings-theme-preview.rose { background: linear-gradient(135deg, #E87A9F 0%, #F4B8C5 100%); }
+        .settings-theme-preview.slate { background: linear-gradient(135deg, #475569 0%, #94A3B8 100%); }
+        .settings-theme-preview.midnight { background: linear-gradient(135deg, #1F2937 0%, #4B5563 100%); }
+        .settings-theme-preview.monochrome { background: linear-gradient(135deg, #404040 0%, #E5E5E5 100%); }
+        .settings-theme-preview.carbon { background: linear-gradient(135deg, #18181B 0%, #3F3F46 100%); }
+
+        /* Icon Picker Styles */
+        .icon-picker-wrapper {
+            position: relative;
+        }
+
+        .icon-picker-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--cream-dark);
+            border-radius: 12px;
+            background: white;
+            font-family: inherit;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .icon-picker-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .icon-picker-btn:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .icon-picker-selected {
+            font-size: 24px;
+        }
+
+        .icon-picker-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 8px;
+            background: white;
+            border: 2px solid var(--cream-dark);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: var(--shadow-lifted);
+            z-index: 100;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .icon-picker-dropdown.visible {
+            display: block;
+        }
+
+        .icon-picker-category {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin: 12px 0 8px 0;
+        }
+
+        .icon-picker-category:first-child {
+            margin-top: 0;
+        }
+
+        .icon-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+        }
+
+        .icon-option {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .icon-option:hover {
+            background: var(--primary-light);
+            transform: scale(1.1);
+        }
+
+        .icon-option.selected {
+            background: var(--accent);
+        }
 
         .settings-theme-option span {
             font-size: 12px;
@@ -2413,6 +2645,21 @@
                         <input type="password" class="auth-input" id="signupPassword" placeholder="At least 6 characters" minlength="6" required>
                     </div>
                     <div class="auth-input-group">
+                        <label class="auth-label">Choose your icon</label>
+                        <div class="icon-picker-wrapper">
+                            <button type="button" class="icon-picker-btn" onclick="toggleSignupIconPicker()">
+                                <span class="icon-picker-selected" id="signupIconSelected">📋</span>
+                                <span>Click to choose an icon</span>
+                            </button>
+                            <div class="icon-picker-dropdown" id="signupIconDropdown">
+                                <div class="icon-picker-category">Professional</div>
+                                <div class="icon-picker-grid" id="signupIconGrid">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="auth-input-group">
                         <label class="auth-label">Choose your color theme</label>
                         <div class="theme-picker" id="signupThemePicker">
                             <div class="theme-option selected" data-theme="peach" onclick="selectSignupTheme('peach')">
@@ -2438,6 +2685,22 @@
                             <div class="theme-option" data-theme="rose" onclick="selectSignupTheme('rose')">
                                 <div class="theme-preview rose"></div>
                                 <span>Rose</span>
+                            </div>
+                            <div class="theme-option" data-theme="slate" onclick="selectSignupTheme('slate')">
+                                <div class="theme-preview slate"></div>
+                                <span>Slate</span>
+                            </div>
+                            <div class="theme-option" data-theme="midnight" onclick="selectSignupTheme('midnight')">
+                                <div class="theme-preview midnight"></div>
+                                <span>Midnight</span>
+                            </div>
+                            <div class="theme-option" data-theme="monochrome" onclick="selectSignupTheme('monochrome')">
+                                <div class="theme-preview monochrome"></div>
+                                <span>Mono</span>
+                            </div>
+                            <div class="theme-option" data-theme="carbon" onclick="selectSignupTheme('carbon')">
+                                <div class="theme-preview carbon"></div>
+                                <span>Carbon</span>
                             </div>
                         </div>
                     </div>
@@ -2467,7 +2730,7 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <div class="logo-icon">🌸</div>
+                <div class="logo-icon" id="sidebarIcon">📋</div>
                 <div class="logo-text"><span id="sidebarName">My</span> Planner</div>
             </div>
 
@@ -2990,12 +3253,28 @@
 
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
-        <div class="modal">
+        <div class="modal" style="max-width: 540px;">
             <h3 class="modal-title">⚙️ Settings</h3>
 
             <div class="settings-section">
                 <div class="settings-section-title">Your Name</div>
                 <input type="text" class="form-input" id="settingsName" placeholder="Your first name">
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-section-title">Your Icon</div>
+                <div class="icon-picker-wrapper">
+                    <button type="button" class="icon-picker-btn" onclick="toggleSettingsIconPicker()">
+                        <span class="icon-picker-selected" id="settingsIconSelected">📋</span>
+                        <span>Click to choose an icon</span>
+                    </button>
+                    <div class="icon-picker-dropdown" id="settingsIconDropdown">
+                        <div class="icon-picker-category">Professional</div>
+                        <div class="icon-picker-grid" id="settingsIconGrid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="settings-section">
@@ -3025,6 +3304,22 @@
                         <div class="settings-theme-preview rose"></div>
                         <span>Rose</span>
                     </div>
+                    <div class="settings-theme-option" data-theme="slate" onclick="selectSettingsTheme('slate')">
+                        <div class="settings-theme-preview slate"></div>
+                        <span>Slate</span>
+                    </div>
+                    <div class="settings-theme-option" data-theme="midnight" onclick="selectSettingsTheme('midnight')">
+                        <div class="settings-theme-preview midnight"></div>
+                        <span>Midnight</span>
+                    </div>
+                    <div class="settings-theme-option" data-theme="monochrome" onclick="selectSettingsTheme('monochrome')">
+                        <div class="settings-theme-preview monochrome"></div>
+                        <span>Mono</span>
+                    </div>
+                    <div class="settings-theme-option" data-theme="carbon" onclick="selectSettingsTheme('carbon')">
+                        <div class="settings-theme-preview carbon"></div>
+                        <span>Carbon</span>
+                    </div>
                 </div>
             </div>
 
@@ -3046,6 +3341,17 @@
         let currentUser = null;
         let userProfile = null;
         let selectedSignupTheme = 'peach';
+        let selectedSignupIcon = '📋';
+        let selectedSettingsIcon = '📋';
+
+        // ========== ICON OPTIONS ==========
+        const iconCategories = {
+            'Professional': ['📋', '📊', '📈', '💼', '🎯', '⚡', '🔷', '◼️', '📁', '📌', '✅', '📝', '🗂️', '💡', '🔔', '⭐'],
+            'Nature': ['🌸', '🌿', '🌻', '🍀', '🌺', '🌼', '🌷', '🌱', '🍃', '☀️', '🌙', '⭐', '🌊', '🔥', '❄️', '🌈'],
+            'Activities': ['🎨', '🎵', '📚', '✈️', '🏃', '🧘', '🎮', '☕', '🍕', '🎬', '📷', '🎸', '⚽', '🏋️', '🚀', '💪'],
+            'Symbols': ['💎', '🔮', '🎀', '👑', '💫', '✨', '🌟', '💜', '💙', '💚', '🧡', '❤️', '🖤', '🤍', '💛', '🩷'],
+            'Fun': ['😊', '🦊', '🐱', '🐶', '🦋', '🐝', '🦄', '🐼', '🦁', '🐨', '🦉', '🐸', '🌴', '🎪', '🎡', '🎢']
+        };
 
         // ========== DATA STORE ==========
         let stickyNotes = [];
@@ -3105,13 +3411,13 @@
             if (!userProfile) {
                 const pendingProfile = localStorage.getItem('pendingProfile');
                 if (pendingProfile) {
-                    const { firstName, colorTheme } = JSON.parse(pendingProfile);
-                    userProfile = await createUserProfile(firstName, colorTheme);
+                    const { firstName, colorTheme, icon } = JSON.parse(pendingProfile);
+                    userProfile = await createUserProfile(firstName, colorTheme, icon || '📋');
                     localStorage.removeItem('pendingProfile');
                 } else {
                     // Create a default profile
                     const name = email.split('@')[0];
-                    userProfile = await createUserProfile(name, 'peach');
+                    userProfile = await createUserProfile(name, 'peach', '📋');
                 }
             }
 
@@ -3159,7 +3465,7 @@
                 currentUser = data.user;
 
                 // Create user profile
-                userProfile = await createUserProfile(firstName, selectedSignupTheme);
+                userProfile = await createUserProfile(firstName, selectedSignupTheme, selectedSignupIcon);
 
                 await initializeApp();
             } else {
@@ -3172,7 +3478,8 @@
                 // Store signup data for when they confirm and log in
                 localStorage.setItem('pendingProfile', JSON.stringify({
                     firstName,
-                    colorTheme: selectedSignupTheme
+                    colorTheme: selectedSignupTheme,
+                    icon: selectedSignupIcon
                 }));
             }
         }
@@ -3208,15 +3515,73 @@
             const email = currentUser.email;
             const name = userProfile?.first_name || email.split('@')[0];
             const initial = name.charAt(0).toUpperCase();
+            const icon = userProfile?.icon || '📋';
 
             document.getElementById('userAvatar').textContent = initial;
             document.getElementById('userName').textContent = name;
             document.getElementById('userEmail').textContent = email;
             document.getElementById('sidebarName').textContent = name + "'s";
+            document.getElementById('sidebarIcon').textContent = icon;
 
             // Apply theme
             applyTheme(userProfile?.color_theme || 'peach');
         }
+
+        // ========== ICON PICKER FUNCTIONS ==========
+        function renderIconPicker(gridId, selectedIcon, onSelect) {
+            const grid = document.getElementById(gridId);
+            let html = '';
+
+            for (const [category, icons] of Object.entries(iconCategories)) {
+                html += `<div class="icon-picker-category">${category}</div><div class="icon-picker-grid">`;
+                icons.forEach(icon => {
+                    const isSelected = icon === selectedIcon ? ' selected' : '';
+                    html += `<div class="icon-option${isSelected}" data-icon="${icon}" onclick="${onSelect}('${icon}')">${icon}</div>`;
+                });
+                html += '</div>';
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function toggleSignupIconPicker() {
+            const dropdown = document.getElementById('signupIconDropdown');
+            dropdown.classList.toggle('visible');
+
+            if (dropdown.classList.contains('visible')) {
+                renderIconPicker('signupIconDropdown', selectedSignupIcon, 'selectSignupIcon');
+            }
+        }
+
+        function selectSignupIcon(icon) {
+            selectedSignupIcon = icon;
+            document.getElementById('signupIconSelected').textContent = icon;
+            document.getElementById('signupIconDropdown').classList.remove('visible');
+        }
+
+        function toggleSettingsIconPicker() {
+            const dropdown = document.getElementById('settingsIconDropdown');
+            dropdown.classList.toggle('visible');
+
+            if (dropdown.classList.contains('visible')) {
+                renderIconPicker('settingsIconDropdown', selectedSettingsIcon, 'selectSettingsIcon');
+            }
+        }
+
+        function selectSettingsIcon(icon) {
+            selectedSettingsIcon = icon;
+            document.getElementById('settingsIconSelected').textContent = icon;
+            document.getElementById('settingsIconDropdown').classList.remove('visible');
+            // Preview the icon
+            document.getElementById('sidebarIcon').textContent = icon;
+        }
+
+        // Close icon pickers when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.icon-picker-wrapper')) {
+                document.querySelectorAll('.icon-picker-dropdown').forEach(d => d.classList.remove('visible'));
+            }
+        });
 
         // ========== THEME FUNCTIONS ==========
         function applyTheme(theme) {
@@ -3255,13 +3620,14 @@
             return data;
         }
 
-        async function createUserProfile(firstName, colorTheme) {
+        async function createUserProfile(firstName, colorTheme, icon = '📋') {
             const { data, error } = await db
                 .from('user_profiles')
                 .insert([{
                     id: currentUser.id,
                     first_name: firstName,
-                    color_theme: colorTheme
+                    color_theme: colorTheme,
+                    icon: icon
                 }])
                 .select()
                 .single();
@@ -3274,12 +3640,13 @@
             return data;
         }
 
-        async function updateUserProfile(firstName, colorTheme) {
+        async function updateUserProfile(firstName, colorTheme, icon) {
             const { data, error } = await db
                 .from('user_profiles')
                 .update({
                     first_name: firstName,
                     color_theme: colorTheme,
+                    icon: icon,
                     updated_at: new Date().toISOString()
                 })
                 .eq('id', currentUser.id)
@@ -3299,6 +3666,10 @@
             document.getElementById('userDropdown').classList.remove('visible');
             document.getElementById('settingsName').value = userProfile?.first_name || '';
 
+            // Set current icon
+            selectedSettingsIcon = userProfile?.icon || '📋';
+            document.getElementById('settingsIconSelected').textContent = selectedSettingsIcon;
+
             // Select current theme
             const currentTheme = userProfile?.color_theme || 'peach';
             document.querySelectorAll('#settingsThemePicker .settings-theme-option').forEach(opt => {
@@ -3310,8 +3681,9 @@
 
         function closeSettingsModal() {
             document.getElementById('settingsModal').classList.remove('active');
-            // Revert theme preview if cancelled
+            // Revert theme and icon preview if cancelled
             applyTheme(userProfile?.color_theme || 'peach');
+            document.getElementById('sidebarIcon').textContent = userProfile?.icon || '📋';
         }
 
         async function saveSettings() {
@@ -3323,7 +3695,7 @@
                 return;
             }
 
-            const updated = await updateUserProfile(name, selectedTheme);
+            const updated = await updateUserProfile(name, selectedTheme, selectedSettingsIcon);
             if (updated) {
                 userProfile = updated;
                 updateUserUI();
