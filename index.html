@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amber's Planner</title>
+    <title>My Planner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
@@ -11,19 +11,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
+            /* Base colors - overridden by theme */
             --cream: #FDF8F3;
             --cream-dark: #F5EDE4;
-            --peach: #FFCAB0;
-            --peach-light: #FFE4D6;
-            --coral: #FF8A7A;
-            --coral-dark: #E86B5A;
-            --sage: #B8D4C8;
-            --sage-dark: #8FB8A8;
-            --lavender: #D4C8E8;
-            --lavender-dark: #B8A8D4;
-            --butter: #FFE5A0;
-            --butter-dark: #F5D060;
-            --sky: #A8D4E8;
+            --primary: #FFCAB0;
+            --primary-light: #FFE4D6;
+            --accent: #FF8A7A;
+            --accent-dark: #E86B5A;
+            --secondary: #B8D4C8;
+            --secondary-dark: #8FB8A8;
+            --tertiary: #D4C8E8;
+            --tertiary-dark: #B8A8D4;
+            --highlight: #FFE5A0;
+            --highlight-dark: #F5D060;
+            --info: #A8D4E8;
             --text-dark: #3D3D3D;
             --text-medium: #6B6B6B;
             --text-light: #9B9B9B;
@@ -32,6 +33,74 @@
             --shadow-lifted: 0 12px 40px rgba(0,0,0,0.12);
             --radius-soft: 16px;
             --radius-round: 24px;
+
+            /* Legacy mappings for compatibility */
+            --peach: var(--primary);
+            --peach-light: var(--primary-light);
+            --coral: var(--accent);
+            --coral-dark: var(--accent-dark);
+            --sage: var(--secondary);
+            --sage-dark: var(--secondary-dark);
+            --lavender: var(--tertiary);
+            --lavender-dark: var(--tertiary-dark);
+            --butter: var(--highlight);
+            --butter-dark: var(--highlight-dark);
+            --sky: var(--info);
+        }
+
+        /* ========== COLOR THEMES ========== */
+        [data-theme="peach"] {
+            --primary: #FFCAB0;
+            --primary-light: #FFE4D6;
+            --accent: #FF8A7A;
+            --accent-dark: #E86B5A;
+            --cream: #FDF8F3;
+            --cream-dark: #F5EDE4;
+        }
+
+        [data-theme="lavender"] {
+            --primary: #D4C8E8;
+            --primary-light: #EDE8F5;
+            --accent: #9B7ED4;
+            --accent-dark: #7B5DB8;
+            --cream: #FAF8FD;
+            --cream-dark: #F0EBF7;
+        }
+
+        [data-theme="sage"] {
+            --primary: #B8D4C8;
+            --primary-light: #D8EBE3;
+            --accent: #6BAF92;
+            --accent-dark: #4A9474;
+            --cream: #F7FBF9;
+            --cream-dark: #E8F2ED;
+        }
+
+        [data-theme="ocean"] {
+            --primary: #A8D4E8;
+            --primary-light: #D0E9F4;
+            --accent: #5BA4C4;
+            --accent-dark: #3D8AAD;
+            --cream: #F5FAFC;
+            --cream-dark: #E4F0F5;
+        }
+
+        [data-theme="sunset"] {
+            --primary: #FFB88C;
+            --primary-light: #FFDCC8;
+            --accent: #FF7B54;
+            --accent-dark: #E55A34;
+            --cream: #FFFAF5;
+            --cream-dark: #FFF0E5;
+        }
+
+        [data-theme="rose"] {
+            --primary: #F4B8C5;
+            --primary-light: #FCDCE3;
+            --accent: #E87A9F;
+            --accent-dark: #D4567F;
+            --cream: #FDF8F9;
+            --cream-dark: #F9EDF0;
         }
 
         * {
@@ -2037,6 +2106,54 @@
             text-decoration: underline;
         }
 
+        /* Theme Picker */
+        .theme-picker {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .theme-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            border: 2px solid var(--cream-dark);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-option:hover {
+            border-color: var(--primary);
+        }
+
+        .theme-option.selected {
+            border-color: var(--accent);
+            background: var(--primary-light);
+        }
+
+        .theme-preview {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .theme-preview.peach { background: linear-gradient(135deg, #FF8A7A 0%, #FFCAB0 100%); }
+        .theme-preview.lavender { background: linear-gradient(135deg, #9B7ED4 0%, #D4C8E8 100%); }
+        .theme-preview.sage { background: linear-gradient(135deg, #6BAF92 0%, #B8D4C8 100%); }
+        .theme-preview.ocean { background: linear-gradient(135deg, #5BA4C4 0%, #A8D4E8 100%); }
+        .theme-preview.sunset { background: linear-gradient(135deg, #FF7B54 0%, #FFB88C 100%); }
+        .theme-preview.rose { background: linear-gradient(135deg, #E87A9F 0%, #F4B8C5 100%); }
+
+        .theme-option span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+
         .auth-error {
             background: #FEE2E2;
             color: #DC2626;
@@ -2153,6 +2270,68 @@
             margin-bottom: 8px;
         }
 
+        /* Settings Modal */
+        .settings-section {
+            margin-bottom: 28px;
+        }
+
+        .settings-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+
+        .settings-theme-picker {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .settings-theme-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 12px;
+            border: 2px solid var(--cream-dark);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .settings-theme-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .settings-theme-option.selected {
+            border-color: var(--accent);
+            background: var(--primary-light);
+        }
+
+        .settings-theme-preview {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .settings-theme-preview.peach { background: linear-gradient(135deg, #FF8A7A 0%, #FFCAB0 100%); }
+        .settings-theme-preview.lavender { background: linear-gradient(135deg, #9B7ED4 0%, #D4C8E8 100%); }
+        .settings-theme-preview.sage { background: linear-gradient(135deg, #6BAF92 0%, #B8D4C8 100%); }
+        .settings-theme-preview.ocean { background: linear-gradient(135deg, #5BA4C4 0%, #A8D4E8 100%); }
+        .settings-theme-preview.sunset { background: linear-gradient(135deg, #FF7B54 0%, #FFB88C 100%); }
+        .settings-theme-preview.rose { background: linear-gradient(135deg, #E87A9F 0%, #F4B8C5 100%); }
+
+        .settings-theme-option span {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .dashboard-grid {
@@ -2185,7 +2364,7 @@
         <div class="auth-container">
             <div class="auth-logo">
                 <div class="auth-logo-icon">🌸</div>
-                <div class="auth-logo-text"><span>Amber's</span> Planner</div>
+                <div class="auth-logo-text"><span>My</span> Planner</div>
             </div>
 
             <!-- Login Form -->
@@ -2222,12 +2401,45 @@
 
                 <form class="auth-form" onsubmit="handleSignup(event)">
                     <div class="auth-input-group">
+                        <label class="auth-label">First Name</label>
+                        <input type="text" class="auth-input" id="signupName" placeholder="What should we call you?" required>
+                    </div>
+                    <div class="auth-input-group">
                         <label class="auth-label">Email</label>
                         <input type="email" class="auth-input" id="signupEmail" placeholder="you@example.com" required>
                     </div>
                     <div class="auth-input-group">
                         <label class="auth-label">Password</label>
                         <input type="password" class="auth-input" id="signupPassword" placeholder="At least 6 characters" minlength="6" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <label class="auth-label">Choose your color theme</label>
+                        <div class="theme-picker" id="signupThemePicker">
+                            <div class="theme-option selected" data-theme="peach" onclick="selectSignupTheme('peach')">
+                                <div class="theme-preview peach"></div>
+                                <span>Peach</span>
+                            </div>
+                            <div class="theme-option" data-theme="lavender" onclick="selectSignupTheme('lavender')">
+                                <div class="theme-preview lavender"></div>
+                                <span>Lavender</span>
+                            </div>
+                            <div class="theme-option" data-theme="sage" onclick="selectSignupTheme('sage')">
+                                <div class="theme-preview sage"></div>
+                                <span>Sage</span>
+                            </div>
+                            <div class="theme-option" data-theme="ocean" onclick="selectSignupTheme('ocean')">
+                                <div class="theme-preview ocean"></div>
+                                <span>Ocean</span>
+                            </div>
+                            <div class="theme-option" data-theme="sunset" onclick="selectSignupTheme('sunset')">
+                                <div class="theme-preview sunset"></div>
+                                <span>Sunset</span>
+                            </div>
+                            <div class="theme-option" data-theme="rose" onclick="selectSignupTheme('rose')">
+                                <div class="theme-preview rose"></div>
+                                <span>Rose</span>
+                            </div>
+                        </div>
                     </div>
                     <button type="submit" class="auth-btn" id="signupBtn">Create Account</button>
                 </form>
@@ -2256,7 +2468,7 @@
         <aside class="sidebar">
             <div class="logo">
                 <div class="logo-icon">🌸</div>
-                <div class="logo-text"><span>Amber's</span> Planner</div>
+                <div class="logo-text"><span id="sidebarName">My</span> Planner</div>
             </div>
 
             <nav class="nav-section">
@@ -2300,7 +2512,7 @@
             <!-- Header -->
             <header class="header">
                 <div class="greeting">
-                    <h1 class="greeting-text">Good morning, <span>Amber</span>! ☀️</h1>
+                    <h1 class="greeting-text" id="greetingText">Good morning! ☀️</h1>
                     <p class="greeting-date" id="currentDate"></p>
                 </div>
                 <div class="header-actions">
@@ -2312,7 +2524,7 @@
                         </button>
                         <div class="user-dropdown" id="userDropdown">
                             <div class="user-dropdown-email" id="userEmail">user@example.com</div>
-                            <div class="user-dropdown-item" onclick="toggleUserMenu()">
+                            <div class="user-dropdown-item" onclick="openSettingsModal()">
                                 <span>⚙️</span>
                                 <span>Settings</span>
                             </div>
@@ -2776,6 +2988,53 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <h3 class="modal-title">⚙️ Settings</h3>
+
+            <div class="settings-section">
+                <div class="settings-section-title">Your Name</div>
+                <input type="text" class="form-input" id="settingsName" placeholder="Your first name">
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-section-title">Color Theme</div>
+                <div class="settings-theme-picker" id="settingsThemePicker">
+                    <div class="settings-theme-option" data-theme="peach" onclick="selectSettingsTheme('peach')">
+                        <div class="settings-theme-preview peach"></div>
+                        <span>Peach</span>
+                    </div>
+                    <div class="settings-theme-option" data-theme="lavender" onclick="selectSettingsTheme('lavender')">
+                        <div class="settings-theme-preview lavender"></div>
+                        <span>Lavender</span>
+                    </div>
+                    <div class="settings-theme-option" data-theme="sage" onclick="selectSettingsTheme('sage')">
+                        <div class="settings-theme-preview sage"></div>
+                        <span>Sage</span>
+                    </div>
+                    <div class="settings-theme-option" data-theme="ocean" onclick="selectSettingsTheme('ocean')">
+                        <div class="settings-theme-preview ocean"></div>
+                        <span>Ocean</span>
+                    </div>
+                    <div class="settings-theme-option" data-theme="sunset" onclick="selectSettingsTheme('sunset')">
+                        <div class="settings-theme-preview sunset"></div>
+                        <span>Sunset</span>
+                    </div>
+                    <div class="settings-theme-option" data-theme="rose" onclick="selectSettingsTheme('rose')">
+                        <div class="settings-theme-preview rose"></div>
+                        <span>Rose</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ========== SUPABASE CONFIG ==========
         const SUPABASE_URL = 'https://xabgkychlbydmatmszba.supabase.co';
@@ -2785,6 +3044,8 @@
 
         // ========== AUTH STATE ==========
         let currentUser = null;
+        let userProfile = null;
+        let selectedSignupTheme = 'peach';
 
         // ========== DATA STORE ==========
         let stickyNotes = [];
@@ -2836,11 +3097,30 @@
             }
 
             currentUser = data.user;
+
+            // Load or create profile
+            userProfile = await loadUserProfile();
+
+            // Check if there's a pending profile from signup
+            if (!userProfile) {
+                const pendingProfile = localStorage.getItem('pendingProfile');
+                if (pendingProfile) {
+                    const { firstName, colorTheme } = JSON.parse(pendingProfile);
+                    userProfile = await createUserProfile(firstName, colorTheme);
+                    localStorage.removeItem('pendingProfile');
+                } else {
+                    // Create a default profile
+                    const name = email.split('@')[0];
+                    userProfile = await createUserProfile(name, 'peach');
+                }
+            }
+
             await initializeApp();
         }
 
         async function handleSignup(e) {
             e.preventDefault();
+            const firstName = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const btn = document.getElementById('signupBtn');
@@ -2874,15 +3154,26 @@
                 return;
             }
 
-            successEl.textContent = 'Account created! Check your email to confirm, then sign in.';
-            successEl.classList.add('visible');
-            btn.disabled = false;
-            btn.textContent = 'Create Account';
-
-            // If auto-confirm is enabled, log them in
+            // If auto-confirm is enabled, create profile and log them in
             if (data.session) {
                 currentUser = data.user;
+
+                // Create user profile
+                userProfile = await createUserProfile(firstName, selectedSignupTheme);
+
                 await initializeApp();
+            } else {
+                // Email confirmation required - store profile data temporarily
+                successEl.textContent = 'Account created! Check your email to confirm, then sign in.';
+                successEl.classList.add('visible');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+
+                // Store signup data for when they confirm and log in
+                localStorage.setItem('pendingProfile', JSON.stringify({
+                    firstName,
+                    colorTheme: selectedSignupTheme
+                }));
             }
         }
 
@@ -2915,17 +3206,148 @@
             if (!currentUser) return;
 
             const email = currentUser.email;
-            const initial = email.charAt(0).toUpperCase();
-            const name = email.split('@')[0];
+            const name = userProfile?.first_name || email.split('@')[0];
+            const initial = name.charAt(0).toUpperCase();
 
             document.getElementById('userAvatar').textContent = initial;
             document.getElementById('userName').textContent = name;
             document.getElementById('userEmail').textContent = email;
+            document.getElementById('sidebarName').textContent = name + "'s";
+
+            // Apply theme
+            applyTheme(userProfile?.color_theme || 'peach');
         }
+
+        // ========== THEME FUNCTIONS ==========
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        function selectSignupTheme(theme) {
+            selectedSignupTheme = theme;
+            document.querySelectorAll('#signupThemePicker .theme-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.theme === theme);
+            });
+        }
+
+        function selectSettingsTheme(theme) {
+            document.querySelectorAll('#settingsThemePicker .settings-theme-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.theme === theme);
+            });
+            // Preview the theme
+            applyTheme(theme);
+        }
+
+        // ========== PROFILE FUNCTIONS ==========
+        async function loadUserProfile() {
+            if (!currentUser) return null;
+
+            const { data, error } = await db
+                .from('user_profiles')
+                .select('*')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (error && error.code !== 'PGRST116') {
+                console.error('Error loading profile:', error);
+            }
+
+            return data;
+        }
+
+        async function createUserProfile(firstName, colorTheme) {
+            const { data, error } = await db
+                .from('user_profiles')
+                .insert([{
+                    id: currentUser.id,
+                    first_name: firstName,
+                    color_theme: colorTheme
+                }])
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error creating profile:', error);
+                return null;
+            }
+
+            return data;
+        }
+
+        async function updateUserProfile(firstName, colorTheme) {
+            const { data, error } = await db
+                .from('user_profiles')
+                .update({
+                    first_name: firstName,
+                    color_theme: colorTheme,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', currentUser.id)
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error updating profile:', error);
+                return null;
+            }
+
+            return data;
+        }
+
+        // ========== SETTINGS MODAL ==========
+        function openSettingsModal() {
+            document.getElementById('userDropdown').classList.remove('visible');
+            document.getElementById('settingsName').value = userProfile?.first_name || '';
+
+            // Select current theme
+            const currentTheme = userProfile?.color_theme || 'peach';
+            document.querySelectorAll('#settingsThemePicker .settings-theme-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.theme === currentTheme);
+            });
+
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('active');
+            // Revert theme preview if cancelled
+            applyTheme(userProfile?.color_theme || 'peach');
+        }
+
+        async function saveSettings() {
+            const name = document.getElementById('settingsName').value.trim();
+            const selectedTheme = document.querySelector('#settingsThemePicker .settings-theme-option.selected')?.dataset.theme || 'peach';
+
+            if (!name) {
+                alert('Please enter your name');
+                return;
+            }
+
+            const updated = await updateUserProfile(name, selectedTheme);
+            if (updated) {
+                userProfile = updated;
+                updateUserUI();
+                updateGreeting();
+                closeSettingsModal();
+                showSyncIndicator('Settings saved');
+            }
+        }
+
+        // Close settings modal when clicking outside
+        document.getElementById('settingsModal')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeSettingsModal();
+            }
+        });
 
         async function initializeApp() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('loadingOverlay').classList.remove('hidden');
+
+            // Load profile if not already loaded
+            if (!userProfile) {
+                userProfile = await loadUserProfile();
+            }
 
             updateUserUI();
             updateGreeting();
@@ -2957,6 +3379,7 @@
 
             if (session) {
                 currentUser = session.user;
+                userProfile = await loadUserProfile();
                 await initializeApp();
             }
 
@@ -2966,6 +3389,7 @@
                     currentUser = session.user;
                 } else if (event === 'SIGNED_OUT') {
                     currentUser = null;
+                    userProfile = null;
                 }
             });
 
@@ -3063,10 +3487,17 @@
         function updateGreeting() {
             const hour = new Date().getHours();
             let greeting = "Good morning";
-            if (hour >= 12 && hour < 17) greeting = "Good afternoon";
-            else if (hour >= 17) greeting = "Good evening";
+            let emoji = '☀️';
+            if (hour >= 12 && hour < 17) {
+                greeting = "Good afternoon";
+                emoji = '🌤️';
+            } else if (hour >= 17) {
+                greeting = "Good evening";
+                emoji = '🌙';
+            }
 
-            document.querySelector('.greeting-text').innerHTML = `${greeting}, <span>Amber</span>! ${hour < 12 ? '☀️' : hour < 17 ? '🌤️' : '🌙'}`;
+            const name = userProfile?.first_name || 'there';
+            document.getElementById('greetingText').innerHTML = `${greeting}, <span>${name}</span>! ${emoji}`;
         }
 
         function updateCurrentDate() {
