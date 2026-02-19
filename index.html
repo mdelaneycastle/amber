@@ -3,9 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Art Portfolio</title>
+    <title>Amber's Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* General reset and body styling */
+        :root {
+            --cream: #FDF8F3;
+            --cream-dark: #F5EDE4;
+            --peach: #FFCAB0;
+            --peach-light: #FFE4D6;
+            --coral: #FF8A7A;
+            --coral-dark: #E86B5A;
+            --sage: #B8D4C8;
+            --sage-dark: #8FB8A8;
+            --lavender: #D4C8E8;
+            --lavender-dark: #B8A8D4;
+            --butter: #FFE5A0;
+            --butter-dark: #F5D060;
+            --sky: #A8D4E8;
+            --text-dark: #3D3D3D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --shadow-soft: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-medium: 0 8px 30px rgba(0,0,0,0.08);
+            --shadow-lifted: 0 12px 40px rgba(0,0,0,0.12);
+            --radius-soft: 16px;
+            --radius-round: 24px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,311 +41,3878 @@
         }
 
         body {
-            font-family: 'Nexa Heavy', Arial, sans-serif;
-            color: #333;
-            background-color: #f8f8f8;
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        @font-face {
-            font-family: 'Nexa Heavy';
-            src: url('fonts/Nexa-Heavy.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        /* Sticky header with hamburger menu */
-        header.sticky-header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: #000;
-            padding: 10px 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .menu-icon {
-            font-size: 24px;
-            cursor: pointer;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 50px;
-            height: 50px;
-        }
-
-        .menu-icon:hover {
-            color: #888;
-        }
-
-        .menu {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: absolute;
-            top: 60px;
-            width: 100%;
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.5s ease, opacity 0.5s ease;
-            background-image: url('menubar.jpg');
-            background-size: cover;
-            background-position: center;
-        }
-
-        header.sticky-header:hover .menu {
-            max-height: 300px;
-            opacity: 1;
-        }
-
-        .menu a {
-            color: #000;
-            text-decoration: none;
-            font-size: 24px;
-            padding: 20px 0;
-            position: relative;
-            transition: color 0.5s ease;
-            font-weight: bold;
-        }
-
-        .menu a::after {
+        /* Subtle paper texture overlay */
+        body::before {
             content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: #000;
-            left: 0;
-            bottom: 10px;
-            transition: width 0.6s ease;
-        }
-
-        .menu a:hover::after {
-            width: 100%;
-        }
-
-        .menu a:hover {
-            color: #000;
-        }
-
-        .menu {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .menu a {
-            display: inline-block;
-        }
-
-        /* Hero section styling */
-        .hero {
-            height: 100vh;
-            background-color: #222;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-        }
-
-        /* Gallery section with dimmed images */
-        .gallery-section {
-            padding: 60px 20px;
-            background-color: #f0f0f0;
-        }
-
-        .gallery-section h2 {
-            text-align: center;
-            margin-bottom: 40px;
-            color: #333;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 0 20px;
-        }
-
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            filter: brightness(50%) !important;
-            transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .gallery-item:hover img {
-            filter: brightness(100%);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* About and contact sections */
-        .about-section,
-        .contact-section {
-            padding: 60px 20px;
-            background-color: #fff;
-        }
-
-        .about-section h2,
-        .contact-section h2 {
-            text-align: center;
-            margin-bottom: 40px;
-            color: #333;
-        }
-
-        .about-section p {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            color: #555;
-        }
-
-        .contact-section form {
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .contact-section form input,
-        .contact-section form textarea {
-            padding: 15px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-            transition: background-color 0.3s ease;
-        }
-
-        .contact-section form input:focus,
-        .contact-section form textarea:focus {
-            background-color: #e0e0e0;
-            outline: none;
-        }
-
-        .contact-section form button {
-            padding: 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            background-color: #333;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .contact-section form button:hover {
-            background-color: #555;
-        }
-
-        /* Footer styling */
-        footer {
-            padding: 20px 0;
-            background-color: #000;
-            color: #fff;
-            text-align: center;
-        }
-
-        /* Paint splash overlay */
-        .paint-splash {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #cfcfcf;
-            transform: translateX(-100%);
-            transition: transform 0.6s ease-in-out;
-            z-index: 2000;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
             pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--peach-light) 0%, var(--cream) 100%);
+            padding: 32px 24px;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--peach) 0%, transparent 70%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-soft);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .logo-text span {
+            color: var(--coral);
+        }
+
+        /* Navigation */
+        .nav-section {
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            padding-left: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: var(--radius-soft);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 0;
+            background: var(--coral);
+            border-radius: 0 4px 4px 0;
+            transition: height 0.25s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .nav-item.active {
+            background: white;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .nav-item.active::before {
+            height: 24px;
+        }
+
+        .nav-icon {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .nav-text {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--coral);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        /* Quick Add */
+        .quick-add {
+            margin-top: auto;
+            background: white;
+            border-radius: var(--radius-round);
+            padding: 20px;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-add-title {
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            color: var(--coral);
+            margin-bottom: 12px;
+        }
+
+        .quick-add-input {
+            width: 100%;
+            border: 2px dashed var(--peach);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 14px;
+            background: var(--cream);
+            transition: all 0.25s ease;
+            resize: none;
+        }
+
+        .quick-add-input:focus {
+            outline: none;
+            border-color: var(--coral);
+            background: white;
+        }
+
+        .quick-add-input::placeholder {
+            color: var(--text-light);
+        }
+
+        .quick-add-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .quick-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-btn.primary {
+            background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 100%);
+            color: white;
+        }
+
+        .quick-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .quick-btn.secondary {
+            background: var(--cream-dark);
+            color: var(--text-medium);
+        }
+
+        .quick-btn.secondary:hover {
+            background: var(--peach-light);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 32px 40px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .greeting {
+            animation: fadeSlideIn 0.6s ease;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .greeting-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .greeting-text span {
+            color: var(--coral);
+        }
+
+        .greeting-date {
+            color: var(--text-medium);
+            font-size: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .header-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
+            background: white;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.25s ease;
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 28px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--radius-round);
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-medium);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title-icon {
+            font-size: 20px;
+        }
+
+        .card-action {
+            font-size: 13px;
+            color: var(--coral);
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .card-action:hover {
+            color: var(--coral-dark);
+        }
+
+        /* Today's Schedule */
+        .schedule-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--cream-dark);
+            transition: all 0.25s ease;
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-item:hover {
+            padding-left: 8px;
+        }
+
+        .schedule-time {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-light);
+            min-width: 60px;
+        }
+
+        .schedule-content {
+            flex: 1;
+        }
+
+        .schedule-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .schedule-desc {
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+
+        .schedule-tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .tag-work { background: var(--lavender); color: var(--lavender-dark); }
+        .tag-personal { background: var(--peach-light); color: var(--coral); }
+        .tag-health { background: var(--sage); color: var(--sage-dark); }
+
+        /* Mini Calendar */
+        .mini-calendar {
+            margin-bottom: 24px;
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .calendar-month {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .calendar-nav button {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: none;
+            background: var(--cream);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-nav button:hover {
+            background: var(--peach-light);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+
+        .calendar-day-name {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-light);
+            padding: 8px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day:hover {
+            background: var(--cream-dark);
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-light);
+        }
+
+        .calendar-day.today {
+            background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 100%);
+            color: white;
+            font-weight: 700;
+        }
+
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 4px;
+            height: 4px;
+            background: var(--coral);
+            border-radius: 50%;
+        }
+
+        .calendar-day {
+            position: relative;
+        }
+
+        /* Mood Tracker */
+        .mood-tracker {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            padding: 16px 0;
+        }
+
+        .mood-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background: var(--cream);
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.25s ease;
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--peach);
+        }
+
+        .mood-btn.selected {
+            background: var(--peach-light);
+            border-color: var(--coral);
+            transform: scale(1.15);
+        }
+
+        /* ========== STICKY NOTES BOARD ========== */
+        .notes-board {
+            min-height: 600px;
+            background:
+                linear-gradient(90deg, var(--cream-dark) 1px, transparent 1px),
+                linear-gradient(var(--cream-dark) 1px, transparent 1px),
+                var(--cream);
+            background-size: 30px 30px;
+            border-radius: var(--radius-round);
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notes-board-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .notes-board-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .add-note-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 100%);
+            color: white;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .add-note-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .notes-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            min-height: 500px;
+        }
+
+        .sticky-note {
+            width: 220px;
+            min-height: 180px;
+            padding: 20px;
+            border-radius: 4px;
+            cursor: grab;
+            position: relative;
+            box-shadow: var(--shadow-medium);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: noteAppear 0.4s ease;
+        }
+
+        @keyframes noteAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8) rotate(-5deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0);
+            }
+        }
+
+        .sticky-note:hover {
+            transform: scale(1.02) rotate(1deg);
+            box-shadow: var(--shadow-lifted);
+            z-index: 10;
+        }
+
+        .sticky-note.dragging {
+            cursor: grabbing;
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: var(--shadow-lifted);
+            z-index: 100;
+        }
+
+        .sticky-note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 12px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 0 0 4px 4px;
+        }
+
+        .note-yellow { background: linear-gradient(135deg, #FFF9C4 0%, #FFF59D 100%); }
+        .note-pink { background: linear-gradient(135deg, #FFCDD2 0%, #F8BBD9 100%); }
+        .note-blue { background: linear-gradient(135deg, #BBDEFB 0%, #B3E5FC 100%); }
+        .note-green { background: linear-gradient(135deg, #C8E6C9 0%, #DCEDC8 100%); }
+        .note-orange { background: linear-gradient(135deg, #FFE0B2 0%, #FFCCBC 100%); }
+        .note-purple { background: linear-gradient(135deg, #E1BEE7 0%, #D1C4E9 100%); }
+
+        .sticky-note-content {
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+            line-height: 1.5;
+            color: var(--text-dark);
+            min-height: 80px;
+            word-wrap: break-word;
+        }
+
+        .sticky-note-content:focus {
+            outline: none;
+        }
+
+        .sticky-note-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(0,0,0,0.15);
+        }
+
+        .sticky-note-date {
+            font-size: 11px;
+            color: var(--text-medium);
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .sticky-note-delete {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: rgba(0,0,0,0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .sticky-note:hover .sticky-note-delete {
+            opacity: 1;
+        }
+
+        .sticky-note-delete:hover {
+            background: var(--coral);
+            color: white;
+        }
+
+        /* Note Color Picker */
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .color-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .color-dot:hover {
+            transform: scale(1.2);
+        }
+
+        .color-dot.selected {
+            border-color: var(--text-dark);
+        }
+
+        .color-dot.yellow { background: #FFF59D; }
+        .color-dot.pink { background: #F8BBD9; }
+        .color-dot.blue { background: #B3E5FC; }
+        .color-dot.green { background: #DCEDC8; }
+        .color-dot.orange { background: #FFCCBC; }
+        .color-dot.purple { background: #D1C4E9; }
+
+        /* ========== WEEKLY PLANNER ========== */
+        .planner-container {
+            background: white;
+            border-radius: var(--radius-round);
+            padding: 32px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .planner-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .planner-header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .planner-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .view-toggle-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-medium);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .view-toggle-btn:hover {
+            color: var(--text-dark);
+        }
+
+        .view-toggle-btn.active {
+            background: white;
+            color: var(--coral);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .planner-nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .planner-nav-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 10px;
+            background: var(--cream);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .planner-nav-btn:hover {
+            background: var(--peach-light);
+        }
+
+        .planner-nav-label {
+            font-weight: 600;
+            color: var(--text-medium);
+            min-width: 160px;
+            text-align: center;
+        }
+
+        .planner-today-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 10px;
+            background: var(--peach-light);
+            color: var(--coral);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .planner-today-btn:hover {
+            background: var(--coral);
+            color: white;
+        }
+
+        /* Planner Views Container */
+        .planner-view {
+            display: none;
+        }
+
+        .planner-view.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* ========== MONTH VIEW ========== */
+        .month-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--cream-dark);
+            border: 1px solid var(--cream-dark);
+            border-radius: var(--radius-soft);
+            overflow: hidden;
+        }
+
+        .month-day-header {
+            padding: 12px;
+            text-align: center;
+            background: var(--cream);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .month-day {
+            min-height: 100px;
+            padding: 8px;
+            background: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .month-day:hover {
+            background: var(--cream);
+        }
+
+        .month-day.other-month {
+            background: var(--cream);
+        }
+
+        .month-day.other-month .month-day-num {
+            color: var(--text-light);
+        }
+
+        .month-day.today {
+            background: var(--peach-light);
+        }
+
+        .month-day-num {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .month-day.today .month-day-num {
+            background: var(--coral);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .month-event {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+
+        .month-event.work { background: var(--lavender); color: var(--text-dark); }
+        .month-event.personal { background: var(--peach-light); color: var(--coral-dark); }
+        .month-event.health { background: var(--sage); color: var(--sage-dark); }
+
+        .month-more {
+            font-size: 11px;
+            color: var(--text-medium);
+            padding: 2px 6px;
+        }
+
+        /* ========== DAY VIEW ========== */
+        .day-view-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .day-view-date {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .day-view-weekday {
+            color: var(--text-medium);
+            font-size: 15px;
+        }
+
+        .day-grid {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 0;
+            border: 1px solid var(--cream-dark);
+            border-radius: var(--radius-soft);
+            overflow: hidden;
+        }
+
+        .day-time-cell {
+            padding: 16px 12px;
+            background: var(--cream);
+            border-bottom: 1px solid var(--cream-dark);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: right;
+        }
+
+        .day-hour-cell {
+            padding: 12px;
+            border-bottom: 1px solid var(--cream-dark);
+            min-height: 70px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .day-hour-cell:hover {
+            background: var(--cream);
+        }
+
+        .day-event {
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .day-event:hover {
+            transform: scale(1.01);
+        }
+
+        .day-event.work { background: var(--lavender); }
+        .day-event.personal { background: var(--peach-light); }
+        .day-event.health { background: var(--sage); }
+
+        .day-event-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .day-event-desc {
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+
+        .day-event-time {
+            font-size: 11px;
+            color: var(--text-medium);
+            margin-top: 6px;
+        }
+
+        .day-event.has-notes::after {
+            content: ' 📝';
+            font-size: 12px;
+        }
+
+        .planner-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+            gap: 0;
+            border: 1px solid var(--cream-dark);
+            border-radius: var(--radius-soft);
+            overflow: hidden;
+        }
+
+        .planner-header-cell {
+            padding: 16px 8px;
+            text-align: center;
+            background: var(--cream);
+            border-bottom: 1px solid var(--cream-dark);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .planner-header-cell.today {
+            background: var(--peach-light);
+            color: var(--coral);
+        }
+
+        .planner-day-name {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .planner-day-num {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .planner-time-cell {
+            padding: 12px;
+            background: var(--cream);
+            border-right: 1px solid var(--cream-dark);
+            border-bottom: 1px solid var(--cream-dark);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: right;
+        }
+
+        .planner-cell {
+            padding: 8px;
+            border-right: 1px solid var(--cream-dark);
+            border-bottom: 1px solid var(--cream-dark);
+            min-height: 60px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .planner-cell:hover {
+            background: var(--cream);
+        }
+
+        .planner-cell:last-child {
+            border-right: none;
+        }
+
+        .planner-event {
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .planner-event:hover {
+            transform: scale(1.02);
+        }
+
+        .planner-event.work {
+            background: var(--lavender);
+            color: var(--text-dark);
+        }
+
+        .planner-event.personal {
+            background: var(--peach-light);
+            color: var(--coral-dark);
+        }
+
+        .planner-event.health {
+            background: var(--sage);
+            color: var(--sage-dark);
+        }
+
+        .planner-event.has-notes {
+            position: relative;
+        }
+
+        .planner-event.has-notes::after {
+            content: '📝';
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+        }
+
+        /* Event Detail Modal */
+        .event-detail-modal .modal {
+            max-width: 560px;
+        }
+
+        .event-detail-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .event-detail-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .event-detail-icon.work { background: var(--lavender); }
+        .event-detail-icon.personal { background: var(--peach-light); }
+        .event-detail-icon.health { background: var(--sage); }
+
+        .event-detail-info {
+            flex: 1;
+        }
+
+        .event-detail-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .event-detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+
+        .event-detail-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .event-detail-desc {
+            background: var(--cream);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .event-notes-section {
+            background: linear-gradient(135deg, var(--butter) 0%, #FFF9E6 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .event-notes-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .event-notes-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 14px;
+            border: 2px dashed rgba(0,0,0,0.1);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.7);
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.2s ease;
+        }
+
+        .event-notes-textarea:focus {
+            outline: none;
+            border-color: var(--butter-dark);
+            background: white;
+        }
+
+        .event-notes-textarea::placeholder {
+            color: var(--text-light);
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+        }
+
+        .event-notes-hint {
+            font-size: 12px;
+            color: var(--text-medium);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .event-detail-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-danger {
+            background: white;
+            color: var(--coral);
+            border: 2px solid var(--coral);
+        }
+
+        .btn-danger:hover {
+            background: var(--coral);
+            color: white;
+        }
+
+        /* Meeting Notes List on Dashboard */
+        .meeting-notes-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .meeting-note-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 8px;
+        }
+
+        .meeting-note-item:hover {
+            background: var(--cream);
+        }
+
+        .meeting-note-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .meeting-note-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .meeting-note-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .meeting-note-preview {
+            font-size: 12px;
+            color: var(--text-medium);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .meeting-note-date {
+            font-size: 11px;
+            color: var(--text-light);
+            flex-shrink: 0;
+        }
+
+        /* Add Event Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius-round);
+            padding: 32px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--shadow-lifted);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-medium);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--cream-dark);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--coral);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .category-picker {
+            display: flex;
+            gap: 10px;
+        }
+
+        .category-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--cream-dark);
+            border-radius: 10px;
+            background: white;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .category-btn:hover {
+            border-color: var(--peach);
+        }
+
+        .category-btn.selected {
+            border-color: var(--coral);
+            background: var(--peach-light);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-secondary {
+            background: var(--cream);
+            color: var(--text-medium);
+        }
+
+        .btn-secondary:hover {
+            background: var(--cream-dark);
+        }
+
+        /* ========== NOTES ARCHIVE ========== */
+        .notes-archive {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 28px;
+            min-height: 600px;
+        }
+
+        .notes-list {
+            background: white;
+            border-radius: var(--radius-round);
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .notes-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .notes-list-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .add-archive-note-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: var(--peach-light);
+            color: var(--coral);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .add-archive-note-btn:hover {
+            background: var(--coral);
+            color: white;
+        }
+
+        .note-list-item {
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 8px;
+            border: 2px solid transparent;
+        }
+
+        .note-list-item:hover {
+            background: var(--cream);
+        }
+
+        .note-list-item.active {
+            background: var(--peach-light);
+            border-color: var(--coral);
+        }
+
+        .note-list-item-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .note-list-item-preview {
+            font-size: 13px;
+            color: var(--text-medium);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .note-list-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .note-list-item-tag {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .tag-followup {
+            background: var(--coral);
+            color: white;
+        }
+
+        /* Note Editor */
+        .note-editor {
+            background: white;
+            border-radius: var(--radius-round);
+            padding: 32px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .note-editor-header {
+            margin-bottom: 24px;
+        }
+
+        .note-editor-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        .note-editor-title:focus {
+            outline: none;
+        }
+
+        .note-editor-title::placeholder {
+            color: var(--text-light);
+        }
+
+        .note-editor-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .note-editor-date {
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+
+        .followup-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 2px solid var(--cream-dark);
+            background: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .followup-toggle:hover {
+            border-color: var(--coral);
+        }
+
+        .followup-toggle.active {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: white;
+        }
+
+        .note-editor-content {
+            min-height: 400px;
+            font-size: 16px;
+            line-height: 1.8;
+            border: none;
+            width: 100%;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .note-editor-content:focus {
+            outline: none;
+        }
+
+        .note-editor-content::placeholder {
+            color: var(--text-light);
+        }
+
+        /* ========== HABITS TRACKER ========== */
+        .habits-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .habit-card {
+            background: white;
+            border-radius: var(--radius-round);
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .habit-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .habit-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .habit-icon.water { background: var(--sky); }
+        .habit-icon.exercise { background: var(--sage); }
+        .habit-icon.sleep { background: var(--lavender); }
+        .habit-icon.reading { background: var(--butter); }
+
+        .habit-info h3 {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .habit-info span {
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+
+        .habit-progress {
+            margin-bottom: 16px;
+        }
+
+        .habit-progress-bar {
+            height: 8px;
+            background: var(--cream-dark);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .habit-progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .habit-progress-fill.water { background: linear-gradient(90deg, var(--sky), #7EC8E3); }
+        .habit-progress-fill.exercise { background: linear-gradient(90deg, var(--sage), var(--sage-dark)); }
+        .habit-progress-fill.sleep { background: linear-gradient(90deg, var(--lavender), var(--lavender-dark)); }
+        .habit-progress-fill.reading { background: linear-gradient(90deg, var(--butter), var(--butter-dark)); }
+
+        .habit-progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-medium);
+            margin-top: 8px;
+        }
+
+        .habit-days {
+            display: flex;
+            gap: 6px;
+        }
+
+        .habit-day {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 2px solid var(--cream-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .habit-day:hover {
+            border-color: var(--peach);
+        }
+
+        .habit-day.completed {
+            background: var(--sage);
+            border-color: var(--sage);
+            color: white;
+        }
+
+        .habit-day.completed::after {
+            content: '✓';
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-medium);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--cream);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--peach-light);
+            border-top-color: var(--coral);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            color: var(--text-medium);
+        }
+
+        /* Sync indicator */
+        .sync-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 16px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sync-indicator.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sync-indicator.success {
+            color: var(--sage-dark);
+        }
+
+        .sync-indicator.error {
+            color: var(--coral);
+        }
+
+        /* ========== AUTH STYLES ========== */
+        .auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--peach-light) 0%, var(--cream) 50%, var(--lavender) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .auth-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: var(--radius-round);
+            padding: 48px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow-lifted);
+            text-align: center;
+        }
+
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .auth-logo-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .auth-logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .auth-logo-text span {
+            color: var(--coral);
+        }
+
+        .auth-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            color: var(--text-medium);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .auth-form {
+            text-align: left;
+        }
+
+        .auth-input-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-medium);
+            margin-bottom: 8px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--cream-dark);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--coral);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 100%);
+            color: white;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-switch {
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+
+        .auth-switch a {
+            color: var(--coral);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-error {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .auth-error.visible {
+            display: block;
+        }
+
+        .auth-success {
+            background: #D1FAE5;
+            color: #059669;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .auth-success.visible {
+            display: block;
+        }
+
+        /* User menu in header */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 12px;
+            background: white;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .user-btn:hover {
+            box-shadow: var(--shadow-medium);
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lifted);
+            min-width: 200px;
+            padding: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 100;
+        }
+
+        .user-dropdown.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .user-dropdown-item:hover {
+            background: var(--cream);
+        }
+
+        .user-dropdown-item.danger {
+            color: var(--coral);
+        }
+
+        .user-dropdown-email {
+            padding: 12px 14px;
+            font-size: 12px;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--cream-dark);
+            margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notes-archive {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Auth Screen -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <div class="auth-logo-icon">🌸</div>
+                <div class="auth-logo-text"><span>Amber's</span> Planner</div>
+            </div>
 
-    <header class="sticky-header">
-        <div class="menu-icon">
-            &#9776;
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h2 class="auth-title">Welcome back!</h2>
+                <p class="auth-subtitle">Sign in to access your planner</p>
+
+                <div class="auth-error" id="loginError"></div>
+
+                <form class="auth-form" onsubmit="handleLogin(event)">
+                    <div class="auth-input-group">
+                        <label class="auth-label">Email</label>
+                        <input type="email" class="auth-input" id="loginEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <label class="auth-label">Password</label>
+                        <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="auth-btn" id="loginBtn">Sign In</button>
+                </form>
+
+                <p class="auth-switch">
+                    Don't have an account? <a onclick="showSignup()">Sign up</a>
+                </p>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" style="display: none;">
+                <h2 class="auth-title">Create your account</h2>
+                <p class="auth-subtitle">Start organizing your life today</p>
+
+                <div class="auth-error" id="signupError"></div>
+                <div class="auth-success" id="signupSuccess"></div>
+
+                <form class="auth-form" onsubmit="handleSignup(event)">
+                    <div class="auth-input-group">
+                        <label class="auth-label">Email</label>
+                        <input type="email" class="auth-input" id="signupEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <label class="auth-label">Password</label>
+                        <input type="password" class="auth-input" id="signupPassword" placeholder="At least 6 characters" minlength="6" required>
+                    </div>
+                    <button type="submit" class="auth-btn" id="signupBtn">Create Account</button>
+                </form>
+
+                <p class="auth-switch">
+                    Already have an account? <a onclick="showLogin()">Sign in</a>
+                </p>
+            </div>
         </div>
-        <nav class="menu">
-            <a href="index.html">Home</a>
-            <a href="about.html" class="transition-link">About Me</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+    </div>
 
-    <section id="home" class="hero">
-        <h1>Welcome to My Art Portfolio</h1>
-    </section>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading your planner...</div>
+    </div>
 
-    <section id="gallery" class="gallery-section">
-        <h2>My Artwork</h2>
-        <div class="gallery">
-            <div class="gallery-item">
-                <img src="example1.jpg" alt="Artwork 1">
+    <!-- Sync Indicator -->
+    <div class="sync-indicator" id="syncIndicator">
+        <span id="syncIcon">✓</span>
+        <span id="syncText">Saved</span>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">🌸</div>
+                <div class="logo-text"><span>Amber's</span> Planner</div>
             </div>
-            <div class="gallery-item">
-                <img src="example2.jpg" alt="Artwork 2">
+
+            <nav class="nav-section">
+                <div class="nav-label">Menu</div>
+                <div class="nav-item active" data-tab="dashboard">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Dashboard</span>
+                </div>
+                <div class="nav-item" data-tab="board">
+                    <span class="nav-icon">📌</span>
+                    <span class="nav-text">Sticky Board</span>
+                    <span class="nav-badge">5</span>
+                </div>
+                <div class="nav-item" data-tab="planner">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">Weekly Planner</span>
+                </div>
+                <div class="nav-item" data-tab="notes">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-text">Notes Archive</span>
+                </div>
+                <div class="nav-item" data-tab="habits">
+                    <span class="nav-icon">🌱</span>
+                    <span class="nav-text">Habits</span>
+                </div>
+            </nav>
+
+            <!-- Quick Add -->
+            <div class="quick-add">
+                <div class="quick-add-title">✨ Quick Capture</div>
+                <textarea class="quick-add-input" rows="3" placeholder="Jot down a quick thought..."></textarea>
+                <div class="quick-add-buttons">
+                    <button class="quick-btn secondary" id="quickNoteBtn">📌 Note</button>
+                    <button class="quick-btn primary" id="quickEventBtn">📅 Event</button>
+                </div>
             </div>
-            <div class="gallery-item">
-                <img src="example3.jpg" alt="Artwork 3">
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="greeting">
+                    <h1 class="greeting-text">Good morning, <span>Amber</span>! ☀️</h1>
+                    <p class="greeting-date" id="currentDate"></p>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn">🔔</button>
+                    <div class="user-menu">
+                        <button class="user-btn" onclick="toggleUserMenu()">
+                            <div class="user-avatar" id="userAvatar">A</div>
+                            <span id="userName">User</span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="user-dropdown-email" id="userEmail">user@example.com</div>
+                            <div class="user-dropdown-item" onclick="toggleUserMenu()">
+                                <span>⚙️</span>
+                                <span>Settings</span>
+                            </div>
+                            <div class="user-dropdown-item danger" onclick="handleLogout()">
+                                <span>🚪</span>
+                                <span>Sign out</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <div class="dashboard-grid">
+                    <div class="dashboard-main">
+                        <!-- Today's Schedule -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <span class="card-title-icon">📋</span>
+                                    Today's Schedule
+                                </h2>
+                                <span class="card-action" onclick="switchTab('planner')">View all →</span>
+                            </div>
+                            <div class="schedule-list" id="todaySchedule">
+                                <div class="schedule-item">
+                                    <span class="schedule-time">9:00 AM</span>
+                                    <div class="schedule-content">
+                                        <div class="schedule-title">Team standup meeting</div>
+                                        <div class="schedule-desc">Weekly sync with the design team</div>
+                                    </div>
+                                    <span class="schedule-tag tag-work">Work</span>
+                                </div>
+                                <div class="schedule-item">
+                                    <span class="schedule-time">12:30 PM</span>
+                                    <div class="schedule-content">
+                                        <div class="schedule-title">Lunch with Sarah</div>
+                                        <div class="schedule-desc">That new sushi place downtown</div>
+                                    </div>
+                                    <span class="schedule-tag tag-personal">Personal</span>
+                                </div>
+                                <div class="schedule-item">
+                                    <span class="schedule-time">5:00 PM</span>
+                                    <div class="schedule-content">
+                                        <div class="schedule-title">Yoga class</div>
+                                        <div class="schedule-desc">Don't forget the mat!</div>
+                                    </div>
+                                    <span class="schedule-tag tag-health">Health</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Sticky Notes Preview -->
+                        <div class="card" style="margin-top: 24px;">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <span class="card-title-icon">📌</span>
+                                    Pinned Reminders
+                                </h2>
+                                <span class="card-action" onclick="switchTab('board')">View board →</span>
+                            </div>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <div class="sticky-note note-yellow" style="width: 160px; min-height: 120px; padding: 14px;">
+                                    <div class="sticky-note-content" style="font-size: 15px;">Call mom this weekend! 💕</div>
+                                </div>
+                                <div class="sticky-note note-pink" style="width: 160px; min-height: 120px; padding: 14px;">
+                                    <div class="sticky-note-content" style="font-size: 15px;">Buy birthday gift for Jake</div>
+                                </div>
+                                <div class="sticky-note note-blue" style="width: 160px; min-height: 120px; padding: 14px;">
+                                    <div class="sticky-note-content" style="font-size: 15px;">Dentist appt - March 5th</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-sidebar">
+                        <!-- Mini Calendar -->
+                        <div class="card">
+                            <div class="mini-calendar">
+                                <div class="calendar-header">
+                                    <span class="calendar-month" id="calendarMonth">February 2026</span>
+                                    <div class="calendar-nav">
+                                        <button onclick="changeMonth(-1)">←</button>
+                                        <button onclick="changeMonth(1)">→</button>
+                                    </div>
+                                </div>
+                                <div class="calendar-grid" id="calendarGrid">
+                                    <!-- Generated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mood Tracker -->
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <span class="card-title-icon">💭</span>
+                                    How are you feeling?
+                                </h2>
+                            </div>
+                            <div class="mood-tracker">
+                                <button class="mood-btn" data-mood="great">😊</button>
+                                <button class="mood-btn" data-mood="good">🙂</button>
+                                <button class="mood-btn" data-mood="okay">😐</button>
+                                <button class="mood-btn" data-mood="meh">😔</button>
+                                <button class="mood-btn" data-mood="bad">😢</button>
+                            </div>
+                        </div>
+
+                        <!-- Follow-ups -->
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <span class="card-title-icon">🔔</span>
+                                    Follow-ups
+                                </h2>
+                            </div>
+                            <div id="followupsList">
+                                <div class="note-list-item" style="padding: 12px;">
+                                    <div class="note-list-item-title">Project proposal review</div>
+                                    <div class="note-list-item-meta">
+                                        <span>Due: Tomorrow</span>
+                                    </div>
+                                </div>
+                                <div class="note-list-item" style="padding: 12px;">
+                                    <div class="note-list-item-title">Send invoice to client</div>
+                                    <div class="note-list-item-meta">
+                                        <span>Due: Feb 22</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Meeting Notes -->
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    <span class="card-title-icon">📝</span>
+                                    Meeting Notes
+                                </h2>
+                                <span class="card-action" onclick="switchTab('planner')">View all →</span>
+                            </div>
+                            <div class="meeting-notes-list" id="meetingNotesList">
+                                <!-- Generated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sticky Board Tab -->
+            <div class="tab-content" id="board">
+                <div class="notes-board">
+                    <div class="notes-board-header">
+                        <h2 class="notes-board-title">📌 My Sticky Board</h2>
+                        <button class="add-note-btn" onclick="openNoteModal()">
+                            <span>+</span> Add Note
+                        </button>
+                    </div>
+                    <div class="notes-container" id="notesContainer">
+                        <!-- Notes will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planner Tab -->
+            <div class="tab-content" id="planner">
+                <div class="planner-container">
+                    <div class="planner-header">
+                        <div class="planner-header-left">
+                            <h2 class="planner-title">📅 Planner</h2>
+                            <div class="view-toggle">
+                                <button class="view-toggle-btn" data-view="month" onclick="switchPlannerView('month')">Month</button>
+                                <button class="view-toggle-btn active" data-view="week" onclick="switchPlannerView('week')">Week</button>
+                                <button class="view-toggle-btn" data-view="day" onclick="switchPlannerView('day')">Day</button>
+                            </div>
+                        </div>
+                        <div class="planner-nav">
+                            <button class="planner-today-btn" onclick="goToToday()">Today</button>
+                            <button class="planner-nav-btn" onclick="navigatePlanner(-1)">←</button>
+                            <span class="planner-nav-label" id="plannerNavLabel">Feb 17 - 23, 2026</span>
+                            <button class="planner-nav-btn" onclick="navigatePlanner(1)">→</button>
+                        </div>
+                    </div>
+
+                    <!-- Month View -->
+                    <div class="planner-view" id="monthView">
+                        <div class="month-grid" id="monthGrid">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Week View -->
+                    <div class="planner-view active" id="weekView">
+                        <div class="planner-grid" id="plannerGrid">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Day View -->
+                    <div class="planner-view" id="dayView">
+                        <div class="day-view-header">
+                            <div class="day-view-date" id="dayViewDate">Wednesday, Feb 19</div>
+                            <div class="day-view-weekday" id="dayViewWeekday">Today</div>
+                        </div>
+                        <div class="day-grid" id="dayGrid">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Archive Tab -->
+            <div class="tab-content" id="notes">
+                <div class="notes-archive">
+                    <div class="notes-list">
+                        <div class="notes-list-header">
+                            <h3 class="notes-list-title">📝 My Notes</h3>
+                            <button class="add-archive-note-btn" onclick="createNewNote()">+</button>
+                        </div>
+                        <div id="archiveNotesList">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                    <div class="note-editor" id="noteEditor">
+                        <div class="note-editor-header">
+                            <input type="text" class="note-editor-title" id="noteTitle" placeholder="Note title...">
+                            <div class="note-editor-meta">
+                                <span class="note-editor-date" id="noteDate">Created: Feb 19, 2026</span>
+                                <button class="followup-toggle" id="followupToggle" onclick="toggleFollowup()">
+                                    🔔 Follow-up
+                                </button>
+                            </div>
+                        </div>
+                        <textarea class="note-editor-content" id="noteContent" placeholder="Start writing your note..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Habits Tab -->
+            <div class="tab-content" id="habits">
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-bottom: 24px;">🌱 Daily Habits</h2>
+                <div class="habits-container">
+                    <div class="habit-card">
+                        <div class="habit-header">
+                            <div class="habit-icon water">💧</div>
+                            <div class="habit-info">
+                                <h3>Water Intake</h3>
+                                <span>Goal: 8 glasses</span>
+                            </div>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="habit-progress-bar">
+                                <div class="habit-progress-fill water" style="width: 62.5%;"></div>
+                            </div>
+                            <div class="habit-progress-text">
+                                <span>5 / 8 glasses</span>
+                                <span>62%</span>
+                            </div>
+                        </div>
+                        <div class="habit-days">
+                            <div class="habit-day completed">M</div>
+                            <div class="habit-day completed">T</div>
+                            <div class="habit-day completed">W</div>
+                            <div class="habit-day">T</div>
+                            <div class="habit-day">F</div>
+                            <div class="habit-day">S</div>
+                            <div class="habit-day">S</div>
+                        </div>
+                    </div>
+
+                    <div class="habit-card">
+                        <div class="habit-header">
+                            <div class="habit-icon exercise">🏃‍♀️</div>
+                            <div class="habit-info">
+                                <h3>Exercise</h3>
+                                <span>Goal: 30 min/day</span>
+                            </div>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="habit-progress-bar">
+                                <div class="habit-progress-fill exercise" style="width: 100%;"></div>
+                            </div>
+                            <div class="habit-progress-text">
+                                <span>30 / 30 min</span>
+                                <span>Done! ✨</span>
+                            </div>
+                        </div>
+                        <div class="habit-days">
+                            <div class="habit-day completed">M</div>
+                            <div class="habit-day">T</div>
+                            <div class="habit-day completed">W</div>
+                            <div class="habit-day completed">T</div>
+                            <div class="habit-day">F</div>
+                            <div class="habit-day">S</div>
+                            <div class="habit-day">S</div>
+                        </div>
+                    </div>
+
+                    <div class="habit-card">
+                        <div class="habit-header">
+                            <div class="habit-icon sleep">😴</div>
+                            <div class="habit-info">
+                                <h3>Sleep</h3>
+                                <span>Goal: 8 hours</span>
+                            </div>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="habit-progress-bar">
+                                <div class="habit-progress-fill sleep" style="width: 87.5%;"></div>
+                            </div>
+                            <div class="habit-progress-text">
+                                <span>7 / 8 hours</span>
+                                <span>87%</span>
+                            </div>
+                        </div>
+                        <div class="habit-days">
+                            <div class="habit-day completed">M</div>
+                            <div class="habit-day completed">T</div>
+                            <div class="habit-day">W</div>
+                            <div class="habit-day completed">T</div>
+                            <div class="habit-day completed">F</div>
+                            <div class="habit-day">S</div>
+                            <div class="habit-day">S</div>
+                        </div>
+                    </div>
+
+                    <div class="habit-card">
+                        <div class="habit-header">
+                            <div class="habit-icon reading">📚</div>
+                            <div class="habit-info">
+                                <h3>Reading</h3>
+                                <span>Goal: 20 pages</span>
+                            </div>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="habit-progress-bar">
+                                <div class="habit-progress-fill reading" style="width: 75%;"></div>
+                            </div>
+                            <div class="habit-progress-text">
+                                <span>15 / 20 pages</span>
+                                <span>75%</span>
+                            </div>
+                        </div>
+                        <div class="habit-days">
+                            <div class="habit-day completed">M</div>
+                            <div class="habit-day completed">T</div>
+                            <div class="habit-day completed">W</div>
+                            <div class="habit-day completed">T</div>
+                            <div class="habit-day">F</div>
+                            <div class="habit-day">S</div>
+                            <div class="habit-day">S</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Note Modal -->
+    <div class="modal-overlay" id="noteModal">
+        <div class="modal">
+            <h3 class="modal-title">📌 New Sticky Note</h3>
+            <div class="form-group">
+                <label class="form-label">What's on your mind?</label>
+                <textarea class="form-input" id="newNoteContent" rows="4" placeholder="Write your note here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Choose a color</label>
+                <div class="color-picker">
+                    <div class="color-dot yellow selected" data-color="yellow"></div>
+                    <div class="color-dot pink" data-color="pink"></div>
+                    <div class="color-dot blue" data-color="blue"></div>
+                    <div class="color-dot green" data-color="green"></div>
+                    <div class="color-dot orange" data-color="orange"></div>
+                    <div class="color-dot purple" data-color="purple"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addStickyNote()">Add Note</button>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section id="about" class="about-section">
-        <h2>About Me</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vel sem ac sapien commodo fermentum.</p>
-    </section>
+    <!-- Event Detail Modal -->
+    <div class="modal-overlay event-detail-modal" id="eventDetailModal">
+        <div class="modal">
+            <div class="event-detail-header">
+                <div class="event-detail-icon" id="eventDetailIcon">💼</div>
+                <div class="event-detail-info">
+                    <h3 class="event-detail-title" id="eventDetailTitle">Event Title</h3>
+                    <div class="event-detail-meta">
+                        <span id="eventDetailDate">📅 Feb 19, 2026</span>
+                        <span id="eventDetailTime">🕐 9:00 AM</span>
+                        <span id="eventDetailCategory">💼 Work</span>
+                    </div>
+                </div>
+            </div>
+            <div class="event-detail-desc" id="eventDetailDesc">
+                Event description goes here...
+            </div>
+            <div class="event-notes-section">
+                <div class="event-notes-header">
+                    <span>📝</span>
+                    <span>Meeting Notes & Follow-ups</span>
+                </div>
+                <textarea
+                    class="event-notes-textarea"
+                    id="eventNotesTextarea"
+                    placeholder="Jot down important points, action items, or things to follow up on..."
+                ></textarea>
+                <div class="event-notes-hint">
+                    <span>💡</span>
+                    <span>Notes are saved automatically and can be reviewed anytime</span>
+                </div>
+            </div>
+            <div class="event-detail-actions">
+                <button class="btn btn-danger" onclick="deleteEvent()">🗑️ Delete</button>
+                <button class="btn btn-secondary" onclick="closeEventDetailModal()">Close</button>
+                <button class="btn btn-primary" onclick="saveEventNotes()">💾 Save Notes</button>
+            </div>
+        </div>
+    </div>
 
-    <section id="contact" class="contact-section">
-        <h2>Contact</h2>
-        <form>
-            <input type="text" placeholder="Your Name">
-            <input type="email" placeholder="Your Email">
-            <textarea placeholder="Your Message"></textarea>
-            <button type="submit">Send Message</button>
-        </form>
-    </section>
-
-    <footer>
-        <p>&copy; 2024 My Art Portfolio</p>
-    </footer>
-
-    <div class="paint-splash"></div>
+    <!-- Add Event Modal -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal">
+            <h3 class="modal-title">📅 New Event</h3>
+            <div class="form-group">
+                <label class="form-label">Event Title</label>
+                <input type="text" class="form-input" id="eventTitle" placeholder="What's happening?">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <input type="text" class="form-input" id="eventDesc" placeholder="Add details...">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-input" id="eventDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time</label>
+                    <input type="time" class="form-input" id="eventTime">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <div class="category-picker">
+                    <button class="category-btn selected" data-category="work">💼 Work</button>
+                    <button class="category-btn" data-category="personal">🎉 Personal</button>
+                    <button class="category-btn" data-category="health">💪 Health</button>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addEvent()">Add Event</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        document.querySelectorAll('.transition-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent the default link behavior
+        // ========== SUPABASE CONFIG ==========
+        const SUPABASE_URL = 'https://xabgkychlbydmatmszba.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhYmdreWNobGJ5ZG1hdG1zemJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0MzgyNDAsImV4cCI6MjA4NzAxNDI0MH0.EFAl5cv0s7FC22YqAvdFvgmHtdMlCq_BHEYakeCFsIc';
 
-                const targetUrl = this.href; // Get the target URL
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-                const paintSplash = document.querySelector('.paint-splash');
-                paintSplash.style.transform = 'translateX(0%)'; // Stop the splash in the middle
+        // ========== AUTH STATE ==========
+        let currentUser = null;
 
-                setTimeout(() => {
-                    window.location.href = targetUrl; // Navigate to the target page
-                }, 600); // Duration of the animation in milliseconds
+        // ========== DATA STORE ==========
+        let stickyNotes = [];
+        let events = [];
+        let archiveNotes = [];
+        let currentEventId = null;
+        let selectedNoteColor = "yellow";
+        let selectedCategory = "work";
+        let currentNoteId = null;
+        let currentMonth = new Date();
+        let currentWeekStart = getStartOfWeek(new Date());
+
+        // ========== AUTHENTICATION ==========
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('loginError').classList.remove('visible');
+        }
+
+        function showSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('signupError').classList.remove('visible');
+            document.getElementById('signupSuccess').classList.remove('visible');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            const errorEl = document.getElementById('loginError');
+
+            btn.disabled = true;
+            btn.textContent = 'Signing in...';
+            errorEl.classList.remove('visible');
+
+            const { data, error } = await db.auth.signInWithPassword({
+                email,
+                password
             });
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.add('visible');
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+                return;
+            }
+
+            currentUser = data.user;
+            await initializeApp();
+        }
+
+        async function handleSignup(e) {
+            e.preventDefault();
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const btn = document.getElementById('signupBtn');
+            const errorEl = document.getElementById('signupError');
+            const successEl = document.getElementById('signupSuccess');
+
+            btn.disabled = true;
+            btn.textContent = 'Creating account...';
+            errorEl.classList.remove('visible');
+            successEl.classList.remove('visible');
+
+            const { data, error } = await db.auth.signUp({
+                email,
+                password
+            });
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.add('visible');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+                return;
+            }
+
+            // Check if email confirmation is required
+            if (data.user && data.user.identities && data.user.identities.length === 0) {
+                errorEl.textContent = 'This email is already registered. Please sign in.';
+                errorEl.classList.add('visible');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+                return;
+            }
+
+            successEl.textContent = 'Account created! Check your email to confirm, then sign in.';
+            successEl.classList.add('visible');
+            btn.disabled = false;
+            btn.textContent = 'Create Account';
+
+            // If auto-confirm is enabled, log them in
+            if (data.session) {
+                currentUser = data.user;
+                await initializeApp();
+            }
+        }
+
+        async function handleLogout() {
+            await db.auth.signOut();
+            currentUser = null;
+            document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('userDropdown').classList.remove('visible');
+
+            // Clear data
+            stickyNotes = [];
+            events = [];
+            archiveNotes = [];
+
+            showLogin();
+        }
+
+        function toggleUserMenu() {
+            document.getElementById('userDropdown').classList.toggle('visible');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.user-menu')) {
+                document.getElementById('userDropdown')?.classList.remove('visible');
+            }
+        });
+
+        function updateUserUI() {
+            if (!currentUser) return;
+
+            const email = currentUser.email;
+            const initial = email.charAt(0).toUpperCase();
+            const name = email.split('@')[0];
+
+            document.getElementById('userAvatar').textContent = initial;
+            document.getElementById('userName').textContent = name;
+            document.getElementById('userEmail').textContent = email;
+        }
+
+        async function initializeApp() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+
+            updateUserUI();
+            updateGreeting();
+            updateCurrentDate();
+
+            try {
+                // Load data from Supabase
+                await Promise.all([
+                    loadStickyNotes(),
+                    loadEvents(),
+                    loadArchiveNotes()
+                ]);
+
+                renderCalendar();
+                renderMeetingNotes();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showSyncIndicator('Failed to load data', true);
+            }
+
+            // Hide loading overlay
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check for existing session
+            const { data: { session } } = await db.auth.getSession();
+
+            if (session) {
+                currentUser = session.user;
+                await initializeApp();
+            }
+
+            // Listen for auth changes
+            db.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' && session) {
+                    currentUser = session.user;
+                } else if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                }
+            });
+
+            initNavigation();
+            initMoodTracker();
+            initColorPicker();
+            initCategoryPicker();
+            initHabitDays();
+        });
+
+        // ========== SYNC INDICATOR ==========
+        function showSyncIndicator(message, isError = false) {
+            const indicator = document.getElementById('syncIndicator');
+            const icon = document.getElementById('syncIcon');
+            const text = document.getElementById('syncText');
+
+            icon.textContent = isError ? '✕' : '✓';
+            text.textContent = message;
+            indicator.className = `sync-indicator visible ${isError ? 'error' : 'success'}`;
+
+            setTimeout(() => {
+                indicator.classList.remove('visible');
+            }, 2000);
+        }
+
+        // ========== SUPABASE DATA LOADERS ==========
+        async function loadStickyNotes() {
+            const { data, error } = await db
+                .from('sticky_notes')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading sticky notes:', error);
+                return;
+            }
+
+            stickyNotes = data.map(note => ({
+                id: note.id,
+                content: note.content,
+                color: note.color,
+                date: new Date(note.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+            }));
+
+            renderStickyNotes();
+        }
+
+        async function loadEvents() {
+            const { data, error } = await db
+                .from('events')
+                .select('*')
+                .order('event_date', { ascending: true });
+
+            if (error) {
+                console.error('Error loading events:', error);
+                return;
+            }
+
+            events = data.map(event => ({
+                id: event.id,
+                title: event.title,
+                desc: event.description,
+                date: event.event_date,
+                time: event.event_time,
+                category: event.category,
+                notes: event.notes || ''
+            }));
+
+            renderPlanner();
+        }
+
+        async function loadArchiveNotes() {
+            const { data, error } = await db
+                .from('archive_notes')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading archive notes:', error);
+                return;
+            }
+
+            archiveNotes = data.map(note => ({
+                id: note.id,
+                title: note.title,
+                content: note.content,
+                date: new Date(note.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                followup: note.followup
+            }));
+
+            renderArchiveNotes();
+        }
+
+        // ========== GREETING & DATE ==========
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            let greeting = "Good morning";
+            if (hour >= 12 && hour < 17) greeting = "Good afternoon";
+            else if (hour >= 17) greeting = "Good evening";
+
+            document.querySelector('.greeting-text').innerHTML = `${greeting}, <span>Amber</span>! ${hour < 12 ? '☀️' : hour < 17 ? '🌤️' : '🌙'}`;
+        }
+
+        function updateCurrentDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', options);
+        }
+
+        // ========== NAVIGATION ==========
+        function initNavigation() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const tab = item.dataset.tab;
+                    switchTab(tab);
+                });
+            });
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // ========== CALENDAR ==========
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const monthLabel = document.getElementById('calendarMonth');
+
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+
+            monthLabel.textContent = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+
+            const today = new Date();
+
+            let html = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                .map(d => `<div class="calendar-day-name">${d}</div>`).join('');
+
+            // Previous month days
+            const prevMonthDays = new Date(year, month, 0).getDate();
+            for (let i = startDay - 1; i >= 0; i--) {
+                html += `<div class="calendar-day other-month">${prevMonthDays - i}</div>`;
+            }
+
+            // Current month days
+            for (let i = 1; i <= daysInMonth; i++) {
+                const isToday = today.getDate() === i && today.getMonth() === month && today.getFullYear() === year;
+                const hasEvent = events.some(e => {
+                    const d = new Date(e.date);
+                    return d.getDate() === i && d.getMonth() === month;
+                });
+                html += `<div class="calendar-day${isToday ? ' today' : ''}${hasEvent ? ' has-event' : ''}">${i}</div>`;
+            }
+
+            // Next month days
+            const remaining = 42 - (startDay + daysInMonth);
+            for (let i = 1; i <= remaining; i++) {
+                html += `<div class="calendar-day other-month">${i}</div>`;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function changeMonth(delta) {
+            currentMonth.setMonth(currentMonth.getMonth() + delta);
+            renderCalendar();
+        }
+
+        // ========== STICKY NOTES ==========
+        function renderStickyNotes() {
+            const container = document.getElementById('notesContainer');
+            container.innerHTML = stickyNotes.map(note => `
+                <div class="sticky-note note-${note.color}" data-id="${note.id}" draggable="true">
+                    <div class="sticky-note-content" contenteditable="true">${note.content}</div>
+                    <div class="sticky-note-footer">
+                        <span class="sticky-note-date">${note.date}</span>
+                        <button class="sticky-note-delete" onclick="deleteNote(${note.id})">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update badge
+            document.querySelector('.nav-badge').textContent = stickyNotes.length;
+
+            // Add drag handlers
+            initNoteDragging();
+        }
+
+        function initNoteDragging() {
+            document.querySelectorAll('.sticky-note').forEach(note => {
+                note.addEventListener('dragstart', (e) => {
+                    note.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                note.addEventListener('dragend', () => {
+                    note.classList.remove('dragging');
+                });
+            });
+        }
+
+        function openNoteModal() {
+            document.getElementById('noteModal').classList.add('active');
+            document.getElementById('newNoteContent').value = '';
+            document.getElementById('newNoteContent').focus();
+        }
+
+        function closeNoteModal() {
+            document.getElementById('noteModal').classList.remove('active');
+        }
+
+        async function addStickyNote() {
+            const content = document.getElementById('newNoteContent').value.trim();
+            if (!content) return;
+
+            const { data, error } = await db
+                .from('sticky_notes')
+                .insert([{ content, color: selectedNoteColor, user_id: currentUser.id }])
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error adding sticky note:', error);
+                alert('Failed to add note. Please try again.');
+                return;
+            }
+
+            stickyNotes.unshift({
+                id: data.id,
+                content: data.content,
+                color: data.color,
+                date: new Date(data.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+            });
+
+            renderStickyNotes();
+            closeNoteModal();
+            showSyncIndicator('Note added');
+        }
+
+        async function deleteNote(id) {
+            const { error } = await db
+                .from('sticky_notes')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                console.error('Error deleting sticky note:', error);
+                return;
+            }
+
+            stickyNotes = stickyNotes.filter(n => n.id !== id);
+            renderStickyNotes();
+            showSyncIndicator('Note deleted');
+        }
+
+        function initColorPicker() {
+            document.querySelectorAll('.color-dot').forEach(dot => {
+                dot.addEventListener('click', () => {
+                    document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+                    dot.classList.add('selected');
+                    selectedNoteColor = dot.dataset.color;
+                });
+            });
+        }
+
+        // ========== PLANNER ==========
+        let currentPlannerView = 'week';
+        let currentViewDate = new Date();
+
+        function getStartOfWeek(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day;
+            return new Date(d.setDate(diff));
+        }
+
+        function switchPlannerView(view) {
+            currentPlannerView = view;
+
+            // Update toggle buttons
+            document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+
+            // Show/hide views
+            document.querySelectorAll('.planner-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`${view}View`).classList.add('active');
+
+            // Render the appropriate view
+            renderPlanner();
+        }
+
+        function navigatePlanner(delta) {
+            if (currentPlannerView === 'month') {
+                currentViewDate.setMonth(currentViewDate.getMonth() + delta);
+            } else if (currentPlannerView === 'week') {
+                currentViewDate.setDate(currentViewDate.getDate() + (delta * 7));
+                currentWeekStart = getStartOfWeek(currentViewDate);
+            } else if (currentPlannerView === 'day') {
+                currentViewDate.setDate(currentViewDate.getDate() + delta);
+            }
+            renderPlanner();
+        }
+
+        function goToToday() {
+            currentViewDate = new Date();
+            currentWeekStart = getStartOfWeek(currentViewDate);
+            renderPlanner();
+        }
+
+        function updateNavLabel() {
+            const label = document.getElementById('plannerNavLabel');
+
+            if (currentPlannerView === 'month') {
+                label.textContent = currentViewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            } else if (currentPlannerView === 'week') {
+                const weekEnd = new Date(currentWeekStart);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                label.textContent = `${currentWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+            } else if (currentPlannerView === 'day') {
+                label.textContent = currentViewDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+            }
+        }
+
+        function renderPlanner() {
+            updateNavLabel();
+
+            if (currentPlannerView === 'month') {
+                renderMonthView();
+            } else if (currentPlannerView === 'week') {
+                renderWeekView();
+            } else if (currentPlannerView === 'day') {
+                renderDayView();
+            }
+        }
+
+        // ========== MONTH VIEW ==========
+        function renderMonthView() {
+            const grid = document.getElementById('monthGrid');
+            const year = currentViewDate.getFullYear();
+            const month = currentViewDate.getMonth();
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+            const today = new Date();
+
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            // Header row
+            let html = days.map(d => `<div class="month-day-header">${d}</div>`).join('');
+
+            // Previous month days
+            const prevMonthDays = new Date(year, month, 0).getDate();
+            for (let i = startDay - 1; i >= 0; i--) {
+                const dayNum = prevMonthDays - i;
+                const prevMonth = month === 0 ? 11 : month - 1;
+                const prevYear = month === 0 ? year - 1 : year;
+                const dateStr = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+                html += renderMonthDay(dayNum, dateStr, true, false);
+            }
+
+            // Current month days
+            for (let i = 1; i <= daysInMonth; i++) {
+                const isToday = today.getDate() === i && today.getMonth() === month && today.getFullYear() === year;
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                html += renderMonthDay(i, dateStr, false, isToday);
+            }
+
+            // Next month days
+            const totalCells = Math.ceil((startDay + daysInMonth) / 7) * 7;
+            const remaining = totalCells - (startDay + daysInMonth);
+            for (let i = 1; i <= remaining; i++) {
+                const nextMonth = month === 11 ? 0 : month + 1;
+                const nextYear = month === 11 ? year + 1 : year;
+                const dateStr = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                html += renderMonthDay(i, dateStr, true, false);
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function renderMonthDay(dayNum, dateStr, isOtherMonth, isToday) {
+            const dayEvents = events.filter(e => e.date === dateStr);
+            const maxEvents = 3;
+
+            let html = `<div class="month-day${isOtherMonth ? ' other-month' : ''}${isToday ? ' today' : ''}" onclick="openDayFromMonth('${dateStr}')">`;
+            html += `<div class="month-day-num">${dayNum}</div>`;
+
+            dayEvents.slice(0, maxEvents).forEach(e => {
+                html += `<div class="month-event ${e.category}" onclick="event.stopPropagation(); openEventDetail(${e.id})">${e.title}</div>`;
+            });
+
+            if (dayEvents.length > maxEvents) {
+                html += `<div class="month-more">+${dayEvents.length - maxEvents} more</div>`;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function openDayFromMonth(dateStr) {
+            currentViewDate = new Date(dateStr + 'T12:00:00');
+            switchPlannerView('day');
+        }
+
+        // ========== WEEK VIEW ==========
+        function renderWeekView() {
+            const grid = document.getElementById('plannerGrid');
+            currentWeekStart = getStartOfWeek(currentViewDate);
+
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const times = ['8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM'];
+
+            const today = new Date();
+
+            // Header row
+            let html = '<div class="planner-header-cell"></div>';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(currentWeekStart);
+                d.setDate(d.getDate() + i);
+                const isToday = d.toDateString() === today.toDateString();
+                html += `
+                    <div class="planner-header-cell${isToday ? ' today' : ''}">
+                        <div class="planner-day-name">${days[i]}</div>
+                        <div class="planner-day-num">${d.getDate()}</div>
+                    </div>
+                `;
+            }
+
+            // Time rows
+            times.forEach((time, timeIdx) => {
+                html += `<div class="planner-time-cell">${time}</div>`;
+
+                for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
+                    const cellDate = new Date(currentWeekStart);
+                    cellDate.setDate(cellDate.getDate() + dayIdx);
+                    const dateStr = cellDate.toISOString().split('T')[0];
+
+                    const hour = timeIdx + 8;
+                    const cellEvents = events.filter(e => {
+                        const eventHour = parseInt(e.time.split(':')[0]);
+                        return e.date === dateStr && eventHour === hour;
+                    });
+
+                    html += `<div class="planner-cell" onclick="openEventModal('${dateStr}', '${String(hour).padStart(2, '0')}:00')">`;
+                    cellEvents.forEach(e => {
+                        const hasNotes = e.notes && e.notes.trim().length > 0;
+                        html += `<div class="planner-event ${e.category}${hasNotes ? ' has-notes' : ''}" onclick="event.stopPropagation(); openEventDetail(${e.id})">${e.title}</div>`;
+                    });
+                    html += '</div>';
+                }
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // ========== DAY VIEW ==========
+        function renderDayView() {
+            const dateHeader = document.getElementById('dayViewDate');
+            const weekdayLabel = document.getElementById('dayViewWeekday');
+            const grid = document.getElementById('dayGrid');
+
+            const today = new Date();
+            const isToday = currentViewDate.toDateString() === today.toDateString();
+
+            dateHeader.textContent = currentViewDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            weekdayLabel.textContent = isToday ? "Today" : currentViewDate.toLocaleDateString('en-US', { year: 'numeric' });
+
+            const dateStr = currentViewDate.toISOString().split('T')[0];
+            const times = [
+                '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
+                '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM',
+                '6 PM', '7 PM', '8 PM', '9 PM'
+            ];
+
+            let html = '';
+
+            times.forEach((time, idx) => {
+                const hour = idx + 6;
+                const hourEvents = events.filter(e => {
+                    const eventHour = parseInt(e.time.split(':')[0]);
+                    return e.date === dateStr && eventHour === hour;
+                });
+
+                html += `<div class="day-time-cell">${time}</div>`;
+                html += `<div class="day-hour-cell" onclick="openEventModal('${dateStr}', '${String(hour).padStart(2, '0')}:00')">`;
+
+                hourEvents.forEach(e => {
+                    const hasNotes = e.notes && e.notes.trim().length > 0;
+                    const [h, m] = e.time.split(':');
+                    const hour12 = parseInt(h) % 12 || 12;
+                    const ampm = parseInt(h) >= 12 ? 'PM' : 'AM';
+                    const timeStr = `${hour12}:${m} ${ampm}`;
+
+                    html += `
+                        <div class="day-event ${e.category}${hasNotes ? ' has-notes' : ''}" onclick="event.stopPropagation(); openEventDetail(${e.id})">
+                            <div class="day-event-title">${e.title}</div>
+                            ${e.desc ? `<div class="day-event-desc">${e.desc}</div>` : ''}
+                            <div class="day-event-time">${timeStr}</div>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+            });
+
+            grid.innerHTML = html;
+        }
+
+        function changeWeek(delta) {
+            currentWeekStart.setDate(currentWeekStart.getDate() + (delta * 7));
+            currentViewDate = new Date(currentWeekStart);
+            renderPlanner();
+        }
+
+        function openEventModal(date, time) {
+            document.getElementById('eventModal').classList.add('active');
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDesc').value = '';
+            document.getElementById('eventDate').value = date || new Date().toISOString().split('T')[0];
+            document.getElementById('eventTime').value = time || '09:00';
+            document.getElementById('eventTitle').focus();
+        }
+
+        function closeEventModal() {
+            document.getElementById('eventModal').classList.remove('active');
+        }
+
+        async function addEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            const desc = document.getElementById('eventDesc').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+
+            if (!title || !date) return;
+
+            const { data, error } = await db
+                .from('events')
+                .insert([{
+                    title,
+                    description: desc,
+                    event_date: date,
+                    event_time: time || '09:00',
+                    category: selectedCategory,
+                    notes: '',
+                    user_id: currentUser.id
+                }])
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error adding event:', error);
+                alert('Failed to add event. Please try again.');
+                return;
+            }
+
+            events.push({
+                id: data.id,
+                title: data.title,
+                desc: data.description,
+                date: data.event_date,
+                time: data.event_time,
+                category: data.category,
+                notes: data.notes || ''
+            });
+
+            renderPlanner();
+            renderCalendar();
+            renderMeetingNotes();
+            closeEventModal();
+            showSyncIndicator('Event added');
+        }
+
+        function initCategoryPicker() {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedCategory = btn.dataset.category;
+                });
+            });
+        }
+
+        // ========== EVENT DETAIL & NOTES ==========
+        function openEventDetail(eventId) {
+            currentEventId = eventId;
+            const event = events.find(e => e.id === eventId);
+            if (!event) return;
+
+            const categoryIcons = { work: '💼', personal: '🎉', health: '💪' };
+            const categoryNames = { work: 'Work', personal: 'Personal', health: 'Health' };
+
+            // Format date
+            const eventDate = new Date(event.date);
+            const dateStr = eventDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+
+            // Format time
+            const [hours, mins] = event.time.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            const timeStr = `${hour12}:${mins} ${ampm}`;
+
+            // Update modal content
+            document.getElementById('eventDetailIcon').className = `event-detail-icon ${event.category}`;
+            document.getElementById('eventDetailIcon').textContent = categoryIcons[event.category];
+            document.getElementById('eventDetailTitle').textContent = event.title;
+            document.getElementById('eventDetailDate').innerHTML = `📅 ${dateStr}`;
+            document.getElementById('eventDetailTime').innerHTML = `🕐 ${timeStr}`;
+            document.getElementById('eventDetailCategory').innerHTML = `${categoryIcons[event.category]} ${categoryNames[event.category]}`;
+            document.getElementById('eventDetailDesc').textContent = event.desc || 'No description';
+            document.getElementById('eventNotesTextarea').value = event.notes || '';
+
+            // Show modal
+            document.getElementById('eventDetailModal').classList.add('active');
+        }
+
+        function closeEventDetailModal() {
+            document.getElementById('eventDetailModal').classList.remove('active');
+            currentEventId = null;
+        }
+
+        async function saveEventNotes() {
+            if (!currentEventId) return;
+
+            const notes = document.getElementById('eventNotesTextarea').value;
+
+            const { error } = await db
+                .from('events')
+                .update({ notes, updated_at: new Date().toISOString() })
+                .eq('id', currentEventId);
+
+            if (error) {
+                console.error('Error saving event notes:', error);
+                alert('Failed to save notes. Please try again.');
+                return;
+            }
+
+            const event = events.find(e => e.id === currentEventId);
+            if (event) {
+                event.notes = notes;
+                renderPlanner();
+                renderMeetingNotes();
+
+                // Show brief save confirmation
+                const btn = document.querySelector('#eventDetailModal .btn-primary');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✓ Saved!';
+                btn.style.background = 'var(--sage)';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                }, 1500);
+            }
+        }
+
+        async function deleteEvent() {
+            if (!currentEventId) return;
+
+            if (confirm('Are you sure you want to delete this event?')) {
+                const { error } = await db
+                    .from('events')
+                    .delete()
+                    .eq('id', currentEventId);
+
+                if (error) {
+                    console.error('Error deleting event:', error);
+                    alert('Failed to delete event. Please try again.');
+                    return;
+                }
+
+                events = events.filter(e => e.id !== currentEventId);
+                closeEventDetailModal();
+                renderPlanner();
+                renderCalendar();
+                renderMeetingNotes();
+                showSyncIndicator('Event deleted');
+            }
+        }
+
+        // ========== MEETING NOTES LIST ==========
+        function renderMeetingNotes() {
+            const container = document.getElementById('meetingNotesList');
+            const eventsWithNotes = events.filter(e => e.notes && e.notes.trim().length > 0);
+
+            if (eventsWithNotes.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--text-light);">
+                        <div style="font-size: 24px; margin-bottom: 8px;">📝</div>
+                        <div style="font-size: 13px;">No meeting notes yet.<br>Click on an event to add notes!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const categoryIcons = { work: '💼', personal: '🎉', health: '💪' };
+
+            container.innerHTML = eventsWithNotes.map(event => {
+                const eventDate = new Date(event.date);
+                const dateStr = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const notePreview = event.notes.split('\n')[0].substring(0, 40) + (event.notes.length > 40 ? '...' : '');
+
+                return `
+                    <div class="meeting-note-item" onclick="openEventDetail(${event.id})">
+                        <div class="meeting-note-icon ${event.category}" style="background: var(--${event.category === 'work' ? 'lavender' : event.category === 'personal' ? 'peach-light' : 'sage'})">
+                            ${categoryIcons[event.category]}
+                        </div>
+                        <div class="meeting-note-content">
+                            <div class="meeting-note-title">${event.title}</div>
+                            <div class="meeting-note-preview">${notePreview}</div>
+                        </div>
+                        <div class="meeting-note-date">${dateStr}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Auto-save event notes on input (with debounce)
+        let eventNotesSaveTimeout = null;
+
+        document.getElementById('eventNotesTextarea')?.addEventListener('input', () => {
+            if (!currentEventId) return;
+            const event = events.find(e => e.id === currentEventId);
+            if (event) {
+                event.notes = document.getElementById('eventNotesTextarea').value;
+
+                // Auto-save to Supabase with debounce
+                clearTimeout(eventNotesSaveTimeout);
+                eventNotesSaveTimeout = setTimeout(async () => {
+                    await db
+                        .from('events')
+                        .update({ notes: event.notes, updated_at: new Date().toISOString() })
+                        .eq('id', currentEventId);
+
+                    renderPlanner();
+                    renderMeetingNotes();
+                }, 1000);
+            }
+        });
+
+        // Close modals when clicking outside
+        document.getElementById('eventDetailModal')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeEventDetailModal();
+            }
+        });
+
+        document.getElementById('eventModal')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeEventModal();
+            }
+        });
+
+        document.getElementById('noteModal')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeNoteModal();
+            }
+        });
+
+        // ========== ARCHIVE NOTES ==========
+        function renderArchiveNotes() {
+            const list = document.getElementById('archiveNotesList');
+
+            if (archiveNotes.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: var(--text-light);">
+                        <div style="font-size: 32px; margin-bottom: 12px;">📝</div>
+                        <div style="font-size: 14px;">No notes yet.<br>Click + to create one!</div>
+                    </div>
+                `;
+                document.getElementById('noteTitle').value = '';
+                document.getElementById('noteContent').value = '';
+                return;
+            }
+
+            const activeId = currentNoteId || archiveNotes[0].id;
+
+            list.innerHTML = archiveNotes.map((note) => `
+                <div class="note-list-item${note.id === activeId ? ' active' : ''}" data-id="${note.id}" onclick="selectNote(${note.id})">
+                    <div class="note-list-item-title">${note.title || 'Untitled'}</div>
+                    <div class="note-list-item-preview">${(note.content || '').substring(0, 50)}${note.content && note.content.length > 50 ? '...' : ''}</div>
+                    <div class="note-list-item-meta">
+                        <span>${note.date}</span>
+                        ${note.followup ? '<span class="note-list-item-tag tag-followup">Follow-up</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            if (!currentNoteId && archiveNotes.length > 0) {
+                selectNote(archiveNotes[0].id);
+            }
+        }
+
+        function selectNote(id) {
+            currentNoteId = id;
+            const note = archiveNotes.find(n => n.id === id);
+
+            if (!note) return;
+
+            document.querySelectorAll('.note-list-item').forEach(i => i.classList.remove('active'));
+            const noteEl = document.querySelector(`[data-id="${id}"]`);
+            if (noteEl) noteEl.classList.add('active');
+
+            document.getElementById('noteTitle').value = note.title;
+            document.getElementById('noteContent').value = note.content;
+            document.getElementById('noteDate').textContent = `Created: ${note.date}`;
+            document.getElementById('followupToggle').classList.toggle('active', note.followup);
+        }
+
+        async function createNewNote() {
+            const { data, error } = await db
+                .from('archive_notes')
+                .insert([{ title: '', content: '', followup: false, user_id: currentUser.id }])
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error creating note:', error);
+                alert('Failed to create note. Please try again.');
+                return;
+            }
+
+            const newNote = {
+                id: data.id,
+                title: '',
+                content: '',
+                date: new Date(data.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                followup: false
+            };
+
+            archiveNotes.unshift(newNote);
+            renderArchiveNotes();
+            selectNote(newNote.id);
+            document.getElementById('noteTitle').focus();
+        }
+
+        async function toggleFollowup() {
+            const note = archiveNotes.find(n => n.id === currentNoteId);
+            if (!note) return;
+
+            const newFollowup = !note.followup;
+
+            const { error } = await db
+                .from('archive_notes')
+                .update({ followup: newFollowup, updated_at: new Date().toISOString() })
+                .eq('id', currentNoteId);
+
+            if (error) {
+                console.error('Error updating followup:', error);
+                return;
+            }
+
+            note.followup = newFollowup;
+            document.getElementById('followupToggle').classList.toggle('active', note.followup);
+            renderArchiveNotes();
+            selectNote(currentNoteId);
+        }
+
+        // Auto-save archive notes to Supabase
+        let noteSaveTimeout = null;
+
+        async function saveArchiveNote() {
+            if (!currentNoteId) return;
+
+            const note = archiveNotes.find(n => n.id === currentNoteId);
+            if (!note) return;
+
+            const { error } = await db
+                .from('archive_notes')
+                .update({
+                    title: note.title,
+                    content: note.content,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', currentNoteId);
+
+            if (error) {
+                console.error('Error saving archive note:', error);
+            }
+        }
+
+        document.getElementById('noteTitle')?.addEventListener('input', (e) => {
+            const note = archiveNotes.find(n => n.id === currentNoteId);
+            if (note) note.title = e.target.value;
+
+            clearTimeout(noteSaveTimeout);
+            noteSaveTimeout = setTimeout(() => {
+                saveArchiveNote();
+                renderArchiveNotes();
+                selectNote(currentNoteId);
+            }, 800);
+        });
+
+        document.getElementById('noteContent')?.addEventListener('input', (e) => {
+            const note = archiveNotes.find(n => n.id === currentNoteId);
+            if (note) note.content = e.target.value;
+
+            clearTimeout(noteSaveTimeout);
+            noteSaveTimeout = setTimeout(() => saveArchiveNote(), 800);
+        });
+
+        // ========== MOOD TRACKER ==========
+        function initMoodTracker() {
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                });
+            });
+        }
+
+        // ========== HABIT DAYS ==========
+        function initHabitDays() {
+            document.querySelectorAll('.habit-day').forEach(day => {
+                day.addEventListener('click', () => {
+                    day.classList.toggle('completed');
+                });
+            });
+        }
+
+        // ========== QUICK ADD ==========
+        document.getElementById('quickNoteBtn')?.addEventListener('click', () => {
+            const text = document.querySelector('.quick-add-input').value.trim();
+            if (text) {
+                document.getElementById('newNoteContent').value = text;
+                document.querySelector('.quick-add-input').value = '';
+                openNoteModal();
+            }
+        });
+
+        document.getElementById('quickEventBtn')?.addEventListener('click', () => {
+            const text = document.querySelector('.quick-add-input').value.trim();
+            if (text) {
+                document.getElementById('eventTitle').value = text;
+                document.querySelector('.quick-add-input').value = '';
+                openEventModal();
+            }
         });
     </script>
 </body>
