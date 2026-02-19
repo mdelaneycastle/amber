@@ -2814,30 +2814,7 @@
                                 <span class="card-action" onclick="switchTab('planner')">View all →</span>
                             </div>
                             <div class="schedule-list" id="todaySchedule">
-                                <div class="schedule-item">
-                                    <span class="schedule-time">9:00 AM</span>
-                                    <div class="schedule-content">
-                                        <div class="schedule-title">Team standup meeting</div>
-                                        <div class="schedule-desc">Weekly sync with the design team</div>
-                                    </div>
-                                    <span class="schedule-tag tag-work">Work</span>
-                                </div>
-                                <div class="schedule-item">
-                                    <span class="schedule-time">12:30 PM</span>
-                                    <div class="schedule-content">
-                                        <div class="schedule-title">Lunch with Sarah</div>
-                                        <div class="schedule-desc">That new sushi place downtown</div>
-                                    </div>
-                                    <span class="schedule-tag tag-personal">Personal</span>
-                                </div>
-                                <div class="schedule-item">
-                                    <span class="schedule-time">5:00 PM</span>
-                                    <div class="schedule-content">
-                                        <div class="schedule-title">Yoga class</div>
-                                        <div class="schedule-desc">Don't forget the mat!</div>
-                                    </div>
-                                    <span class="schedule-tag tag-health">Health</span>
-                                </div>
+                                <!-- Rendered by JS -->
                             </div>
                         </div>
 
@@ -2850,16 +2827,8 @@
                                 </h2>
                                 <span class="card-action" onclick="switchTab('board')">View board →</span>
                             </div>
-                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                <div class="sticky-note note-yellow" style="width: 160px; min-height: 120px; padding: 14px;">
-                                    <div class="sticky-note-content" style="font-size: 15px;">Call mom this weekend! 💕</div>
-                                </div>
-                                <div class="sticky-note note-pink" style="width: 160px; min-height: 120px; padding: 14px;">
-                                    <div class="sticky-note-content" style="font-size: 15px;">Buy birthday gift for Jake</div>
-                                </div>
-                                <div class="sticky-note note-blue" style="width: 160px; min-height: 120px; padding: 14px;">
-                                    <div class="sticky-note-content" style="font-size: 15px;">Dentist appt - March 5th</div>
-                                </div>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;" id="pinnedReminders">
+                                <!-- Rendered by JS -->
                             </div>
                         </div>
                     </div>
@@ -2907,18 +2876,7 @@
                                 </h2>
                             </div>
                             <div id="followupsList">
-                                <div class="note-list-item" style="padding: 12px;">
-                                    <div class="note-list-item-title">Project proposal review</div>
-                                    <div class="note-list-item-meta">
-                                        <span>Due: Tomorrow</span>
-                                    </div>
-                                </div>
-                                <div class="note-list-item" style="padding: 12px;">
-                                    <div class="note-list-item-title">Send invoice to client</div>
-                                    <div class="note-list-item-meta">
-                                        <span>Due: Feb 22</span>
-                                    </div>
-                                </div>
+                                <!-- Rendered by JS -->
                             </div>
                         </div>
 
@@ -3735,6 +3693,9 @@
 
                 renderCalendar();
                 renderMeetingNotes();
+                renderTodaySchedule();
+                renderPinnedReminders();
+                renderFollowups();
             } catch (error) {
                 console.error('Error loading data:', error);
                 showSyncIndicator('Failed to load data', true);
@@ -3807,6 +3768,7 @@
             }));
 
             renderStickyNotes();
+            renderPinnedReminders();
         }
 
         async function loadEvents() {
@@ -3831,6 +3793,7 @@
             }));
 
             renderPlanner();
+            renderTodaySchedule();
         }
 
         async function loadArchiveNotes() {
@@ -3853,6 +3816,7 @@
             }));
 
             renderArchiveNotes();
+            renderFollowups();
         }
 
         // ========== GREETING & DATE ==========
@@ -4012,6 +3976,7 @@
             });
 
             renderStickyNotes();
+            renderPinnedReminders();
             closeNoteModal();
             showSyncIndicator('Note added');
         }
@@ -4029,6 +3994,7 @@
 
             stickyNotes = stickyNotes.filter(n => n.id !== id);
             renderStickyNotes();
+            renderPinnedReminders();
             showSyncIndicator('Note deleted');
         }
 
@@ -4348,6 +4314,7 @@
             renderPlanner();
             renderCalendar();
             renderMeetingNotes();
+            renderTodaySchedule();
             closeEventModal();
             showSyncIndicator('Event added');
         }
@@ -4455,6 +4422,7 @@
                 renderPlanner();
                 renderCalendar();
                 renderMeetingNotes();
+                renderTodaySchedule();
                 showSyncIndicator('Event deleted');
             }
         }
@@ -4537,6 +4505,91 @@
                 closeNoteModal();
             }
         });
+
+        // ========== DASHBOARD RENDERERS ==========
+        function formatTime(timeStr) {
+            const [hours, mins] = timeStr.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12}:${mins} ${ampm}`;
+        }
+
+        function renderTodaySchedule() {
+            const container = document.getElementById('todaySchedule');
+            const today = new Date().toISOString().split('T')[0];
+            const todaysEvents = events.filter(e => e.date === today).sort((a, b) => a.time.localeCompare(b.time));
+
+            if (todaysEvents.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--text-light);">
+                        <div style="font-size: 24px; margin-bottom: 8px;">📅</div>
+                        <div style="font-size: 13px;">No events scheduled for today.<br>Click the planner to add one!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const categoryIcons = { work: '💼', personal: '🎉', health: '💪' };
+
+            container.innerHTML = todaysEvents.map(event => {
+                const timeStr = formatTime(event.time);
+                return `
+                    <div class="schedule-item" onclick="openEventDetail(${event.id})">
+                        <div class="schedule-time">${timeStr}</div>
+                        <div class="schedule-event ${event.category}">
+                            <span class="schedule-event-title">${event.title}</span>
+                            ${event.notes ? '<span class="schedule-event-notes">📝</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderPinnedReminders() {
+            const container = document.getElementById('pinnedReminders');
+            const recentNotes = stickyNotes.slice(0, 3);
+
+            if (recentNotes.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--text-light); width: 100%;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">📌</div>
+                        <div style="font-size: 13px;">No reminders yet.<br>Add sticky notes to see them here!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = recentNotes.map(note => `
+                <div class="sticky-note note-${note.color}" style="width: 160px; min-height: 120px; padding: 14px; cursor: pointer;" onclick="switchTab('board')">
+                    <div class="sticky-note-content" style="font-size: 15px;">${note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderFollowups() {
+            const container = document.getElementById('followupsList');
+            const followups = archiveNotes.filter(note => note.followup);
+
+            if (followups.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 16px; color: var(--text-light);">
+                        <div style="font-size: 20px; margin-bottom: 6px;">🔔</div>
+                        <div style="font-size: 12px;">No follow-ups marked.<br>Mark notes as follow-up in the archive!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = followups.slice(0, 3).map(note => `
+                <div class="note-list-item" style="padding: 12px; cursor: pointer;" onclick="switchTab('archive'); selectNote(${note.id})">
+                    <div class="note-list-item-title">${note.title || 'Untitled'}</div>
+                    <div class="note-list-item-meta">
+                        <span>${note.date}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
 
         // ========== ARCHIVE NOTES ==========
         function renderArchiveNotes() {
@@ -4634,6 +4687,7 @@
             note.followup = newFollowup;
             document.getElementById('followupToggle').classList.toggle('active', note.followup);
             renderArchiveNotes();
+            renderFollowups();
             selectNote(currentNoteId);
         }
 
